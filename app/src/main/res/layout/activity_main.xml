@@ -19,23 +19,32 @@
             android:layout_height="50dp"></HorizontalScrollView>
     </LinearLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView"
+        android:scrollbars="none">
 
         <LinearLayout
-            android:id="@+id/iconsLayout"
-            android:layout_width="70dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"></LinearLayout>
-
-        <HorizontalScrollView
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
-        </HorizontalScrollView>
+            <LinearLayout
+                android:id="@+id/iconsLayout"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-    </LinearLayout>
+            </LinearLayout>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </HorizontalScrollView>
+        </LinearLayout>
+    </ScrollView>
 
 
 </LinearLayout>

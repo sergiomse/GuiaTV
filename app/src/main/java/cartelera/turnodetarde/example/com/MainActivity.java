@@ -1,7 +1,9 @@
 package cartelera.turnodetarde.example.com;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -29,9 +31,9 @@ public class MainActivity extends Activity {
             text.setText(String.valueOf(i));
             text.setTextSize(24);
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 70);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.left_panel_width));
             text.setLayoutParams(params);
-
+            text.setGravity(Gravity.CENTER);
 
             iconsLayout.addView(text);
         }
