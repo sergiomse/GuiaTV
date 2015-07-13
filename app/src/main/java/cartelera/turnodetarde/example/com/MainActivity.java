@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -72,7 +73,11 @@ public class MainActivity extends Activity {
             channels.add(channel);
         }
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://www.tvguia.es/program/ajax/6/1/7/7/9/0/FFFFFF/FFFFFF/313131/111111";
+        Calendar cal = Calendar.getInstance();
+        String hour = String.valueOf(cal.get(Calendar.HOUR_OF_DAY));
+        String day = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+        String month = String.valueOf(cal.get(Calendar.MONTH));
+        String url ="http://www.tvguia.es/program/ajax/6/1/" + month + "/" + day + "/" + hour + "/0/FFFFFF/FFFFFF/313131/111111";
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -81,8 +86,8 @@ public class MainActivity extends Activity {
                 @Override
                 public void onResponse(String response) {
 
-                    response = response.replaceAll("&nbsp;", " ");
-                    response = "<div>" + response + "</div>";
+                    response = response.replaceAll(getString(R.string.nbsp), " ");
+                    response = getString(R.string.div) + response + "</div>";
 
                     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                     factory.setNamespaceAware(true);
