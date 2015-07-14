@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -24,11 +27,15 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -51,6 +58,7 @@ public class MainActivity extends Activity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private LinearLayout iconsLayout;
+    private LinearLayout programsLayout;
 
     private List<Channel> channels = new ArrayList<>();
 
@@ -60,118 +68,54 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         iconsLayout = (LinearLayout) findViewById(R.id.iconsLayout);
+        programsLayout = (LinearLayout) findViewById(R.id.programsLayout);
 
-        loadChannels();
-
-        populateIconsLayout();
+        readData();
+        drawData();
     }
 
-    private void loadChannels() {
-        for(int i=61; i<149; i++) {
-            Channel channel = new Channel();
-            channel.setName("channel-" + String.valueOf(i));
-            channels.add(channel);
-        }
-        RequestQueue queue = Volley.newRequestQueue(this);
-        Calendar cal = Calendar.getInstance();
-        String hour = String.valueOf(cal.get(Calendar.HOUR_OF_DAY));
-        String day = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
-        String month = String.valueOf(cal.get(Calendar.MONTH));
-        String url ="http://www.tvguia.es/program/ajax/6/1/" + month + "/" + day + "/" + hour + "/0/FFFFFF/FFFFFF/313131/111111";
+    private void drawData() {
+        for(Channel channel : channels) {
+            LinearLayout linearLayout = new LinearLayout(this);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 70);
+            linearLayout.setLayoutParams(params);
 
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-            new Response.Listener<String>() {
-
-                @Override
-                public void onResponse(String response) {
-
-                    response = response.replaceAll(getString(R.string.nbsp), " ");
-                    response = getString(R.string.div) + response + "</div>";
-
-                    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                    factory.setNamespaceAware(true);
-                    DocumentBuilder builder;
-                    Document doc = null;
-
-                    InputSource is = new InputSource(new StringReader(response));
-
-                    try {
-                        builder = factory.newDocumentBuilder();
-                        doc = builder.parse(is);
-                    } catch (ParserConfigurationException e) {
-                        e.printStackTrace();
-                    } catch (SAXException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    for(Channel channel : channels) {
-                        XPath xpath = XPathFactory.newInstance().newXPath();
-                        String expression = "/div/div[@id='" + channel.getName() + "']/div";
-                        try {
-                            NodeList nodes = (NodeList) xpath.evaluate(expression, doc, XPathConstants.NODESET);
-
-                            for (int i = 1; i < nodes.getLength(); i++) {
-                                Node node = nodes.item(i);
-                                loadPrograms(node, channel);
-                            }
-                        } catch (XPathExpressionException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                }
-
-                private void loadPrograms(Node node, Channel channel) {
-                    StringWriter sw = new StringWriter();
-                    try {
-                        Transformer t = TransformerFactory.newInstance().newTransformer();
-                        t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-                        t.setOutputProperty(OutputKeys.INDENT, "yes");
-                        t.transform(new DOMSource(node), new StreamResult(sw));
-                    } catch (TransformerException te) {
-                        System.out.println("nodeToString Transformer Exception");
-                    }
-                    Log.d(TAG, sw.toString());
-                    XPath xpath = XPathFactory.newInstance().newXPath();
-                    String expression = "./div/a";
-
-                    try {
-                        Node textNode = (Node) xpath.evaluate(expression, node, XPathConstants.NODE);
-                        Log.d(TAG, textNode.getTextContent());
-                    } catch (XPathExpressionException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            },
-            new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(MainActivity.this, "Error conexion", Toast.LENGTH_LONG).show();
-                }
-
-            });
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
-    }
-
-    private void populateIconsLayout() {
-        for(int i=0; i<20; i++) {
-            TextView text = new TextView(this);
-            text.setText(String.valueOf(i));
-            text.setTextSize(24);
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.left_panel_width));
-            text.setLayoutParams(params);
-            text.setGravity(Gravity.CENTER);
-
-            iconsLayout.addView(text);
         }
     }
+
+    private void readData() {
+        String line = null;
+        StringBuilder json = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(getResources().openRawResource(R.raw.test)));
+
+        try {
+
+            line = reader.readLine();
+            while (line != null) {
+                json.append(line);
+                json.append("\n");
+                line = reader.readLine();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    reader = null;
+                }
+            }
+        }
+
+        Gson gson = new Gson();
+        channels = gson.fromJson(json.toString(), new TypeToken<List<Channel>>(){}.getType());
+        Collections.sort(channels);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

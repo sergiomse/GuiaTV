@@ -5,10 +5,21 @@ import java.util.List;
 /**
  * Created by turno de tarde on 07/07/2015.
  */
-public class Channel {
+public class Channel implements Comparable<Channel>{
+
+    private int id;
     private String name;
     private int pos;
     private List<Program> programs;
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -32,5 +43,10 @@ public class Channel {
 
     public void setPrograms(List<Program> programs) {
         this.programs = programs;
+    }
+
+    @Override
+    public int compareTo(Channel another) {
+        return pos - another.pos;
     }
 }

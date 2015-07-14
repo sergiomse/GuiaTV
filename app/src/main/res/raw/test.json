@@ -1,0 +1,24 @@
+[
+	{
+		"id":1,
+		"name":"La 1",
+		"pos":0,
+		"programs":[
+			{
+				"finish":"Jul 14, 2015 0:00:00 PM",
+				"name":"Cine de barrio",
+				"start":"Jul 14, 2015 1:00:00 PM"
+			},
+			{
+				"finish":"Jul 14, 2015 1:00:00 PM",
+				"name":"Corazon Corazon",
+				"start":"Jul 14, 2015 2:00:00 PM"
+			},
+			{
+				"finish":"Jul 14, 2015 2:00:00 PM",
+				"name":"Corazon Corazon",
+				"start":"Jul 14, 2015 2:30:00 PM"
+			}
+		]
+	}
+]
