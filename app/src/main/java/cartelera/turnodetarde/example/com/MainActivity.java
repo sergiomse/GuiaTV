@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
@@ -26,7 +29,9 @@ public class MainActivity extends Activity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    private HorizontalScrollView scrollTimeBar;
     private LinearLayout iconsLayout;
+    private HorizontalScrollView scrollProgramsView;
     private LinearLayout programsLayout;
     private TimeBarView timeBarView;
 
@@ -45,8 +50,21 @@ public class MainActivity extends Activity {
         timeBarView.setFinalDate(calendar.getTime());
         timeBarView.invalidate();
 
+        scrollTimeBar = (HorizontalScrollView) findViewById(R.id.scrollTimeBar);
         iconsLayout = (LinearLayout) findViewById(R.id.iconsLayout);
+        scrollProgramsView = (HorizontalScrollView) findViewById(R.id.scrollProgramsView);
         programsLayout = (LinearLayout) findViewById(R.id.programsLayout);
+
+        scrollProgramsView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int scrollX = scrollProgramsView.getScrollX();
+                int scrollY = scrollProgramsView.getScrollY();
+                scrollTimeBar.scrollTo(scrollX, scrollY);
+                return false;
+            }
+        });
+
 
         readData();
         drawData();

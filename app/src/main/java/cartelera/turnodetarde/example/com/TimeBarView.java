@@ -69,7 +69,7 @@ public class TimeBarView extends View {
 
         pntBackground.setColor(Color.rgb(236, 236, 236));
         pntLines.setColor(Color.rgb(222, 222, 222));
-//        pntLines.setColor(Color.BLACK);
+        pntLines.setColor(Color.BLACK);
     }
 
     @Override
