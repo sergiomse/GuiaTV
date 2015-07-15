@@ -72,6 +72,7 @@ public class MainActivity extends Activity {
 
         readData();
         drawData();
+        Log.d(TAG, "Url: " + url);
     }
 
     private void drawData() {
