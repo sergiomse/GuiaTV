@@ -1,4 +1,4 @@
-package cartelera.turnodetarde.example.com;
+package com.example.turnodetarde.guiatv;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
