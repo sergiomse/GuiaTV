@@ -5,5 +5,5 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <color name="corner_background">#0000FF</color>
+    <color name="corner_background">#ECECEC</color>
 </resources>
