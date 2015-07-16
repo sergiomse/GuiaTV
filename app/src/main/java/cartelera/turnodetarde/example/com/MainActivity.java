@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
         timeBarView.setFinalDate(calendar.getTime());
         timeBarView.invalidate();
 
-        scrollTimeBar = (HorizontalScrollView) findViewById(R.id.scrollTimeBar);
+//        scrollTimeBar = (HorizontalScrollView) findViewById(R.id.scrollTimeBar);
         iconsLayout = (LinearLayout) findViewById(R.id.iconsLayout);
         scrollProgramsView = (HorizontalScrollView) findViewById(R.id.scrollProgramsView);
         programsLayout = (LinearLayout) findViewById(R.id.programsLayout);
@@ -59,8 +59,8 @@ public class MainActivity extends Activity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 int scrollX = scrollProgramsView.getScrollX();
-                int scrollY = scrollProgramsView.getScrollY();
-                scrollTimeBar.scrollTo(scrollX, scrollY);
+//                int scrollY = scrollProgramsView.getScrollY();
+                timeBarView.setPosX(scrollX);
                 return false;
             }
         });
@@ -72,10 +72,9 @@ public class MainActivity extends Activity {
 
     private void drawData() {
         for(Channel channel : channels) {
-            LinearLayout linearLayout = new LinearLayout(this);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 70);
-            linearLayout.setLayoutParams(params);
-
+            ChannelBarView channelBarView = new ChannelBarView(this);
+            channelBarView.setChannel(channel);
+            programsLayout.addView(channelBarView);
         }
     }
 
@@ -112,26 +111,4 @@ public class MainActivity extends Activity {
         Collections.sort(channels);
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }
