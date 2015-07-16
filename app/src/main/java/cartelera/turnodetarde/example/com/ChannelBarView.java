@@ -4,10 +4,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -31,6 +33,8 @@ public class ChannelBarView extends View {
 
     private DisplayMetrics dm;
     private Paint pntLines = new Paint();
+    private Paint pntTimeText = new Paint();
+    private SimpleDateFormat sdfTimeText = new SimpleDateFormat("HH.mm");
 
     public ChannelBarView(Context context) {
         super(context);
@@ -52,6 +56,10 @@ public class ChannelBarView extends View {
         setWillNotDraw(false);
         dm = getContext().getResources().getDisplayMetrics();
         pntLines.setColor(Color.rgb(222, 222, 222));
+        pntTimeText.setColor(Color.rgb(82, 157, 166));
+        pntTimeText.setTextSize(18 * dm.density);
+        Typeface typefaceTime = Typeface.create(Typeface.DEFAULT, Typeface.BOLD);
+        pntTimeText.setTypeface(typefaceTime);
     }
 
 
@@ -65,12 +73,31 @@ public class ChannelBarView extends View {
             width = (int) (100 * dm.density * diff / 3600000);
         }
 
-        super.onMeasure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.getMode(widthMeasureSpec)),
-                        MeasureSpec.makeMeasureSpec((int) (72 * dm.density), MeasureSpec.getMode(heightMeasureSpec)));
+        widthMeasureSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
+        heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) (72 * dm.density), MeasureSpec.EXACTLY);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
+
+        int width = 0;
+        int totalWidth = 0;
+        for(Program program : channel.getPrograms()) {
+            Date startDate = program.getStart();
+            Date finishDate = program.getFinish();
+            long diff = finishDate.getTime() - startDate.getTime();
+            width = (int) (100 * dm.density * diff / 3600000);
+
+
+            canvas.drawText(sdfTimeText.format(startDate), totalWidth + 20, 40, pntTimeText);
+
+            canvas.drawLine(totalWidth + width, 0, totalWidth + width, getHeight(), pntLines);
+
+            totalWidth += width;
+        }
+
+
         canvas.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1, pntLines);
     }
 }
