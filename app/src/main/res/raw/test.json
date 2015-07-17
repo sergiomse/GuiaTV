@@ -41,6 +41,21 @@
         "start":"Jul 14, 2015 1:00:00 PM",
         "finish":"Jul 14, 2015 2:30:00 PM",
         "name":"peliculon"
+      },
+      {
+        "start":"Jul 14, 2015 2:30:00 PM",
+        "finish":"Jul 14, 2015 3:30:00 PM",
+        "name":"documental"
+      },
+      {
+        "start":"Jul 14, 2015 3:30:00 PM",
+        "finish":"Jul 14, 2015 4:00:00 PM",
+        "name":"noticias"
+      },
+      {
+        "start":"Jul 14, 2015 4:00:00 PM",
+        "finish":"Jul 14, 2015 4:30:00 PM",
+        "name":"peliculon"
       }
     ]
   }

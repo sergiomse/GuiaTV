@@ -3,19 +3,21 @@
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="72dp"
+    android:padding="5dp"
     android:background="@drawable/program_background">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="21.00"
-        android:textSize="22dp"
+        android:textSize="16dp"
         android:textColor="#529DA6"
+        android:singleLine="true"
         android:id="@+id/tvTime"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="hola"
-        android:textSize="22dp"
+        android:textSize="14dp"
         android:id="@+id/tvProgramName"/>
 </LinearLayout>
