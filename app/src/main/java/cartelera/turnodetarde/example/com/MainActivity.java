@@ -2,14 +2,11 @@ package cartelera.turnodetarde.example.com;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.support.v7.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -17,7 +14,6 @@ import com.google.gson.reflect.TypeToken;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -34,6 +30,7 @@ public class MainActivity extends Activity {
     private HorizontalScrollView scrollProgramsView;
     private LinearLayout programsLayout;
     private TimeBarView timeBarView;
+    private RecyclerView recyclerView;
 
     private List<Channel> channels = new ArrayList<>();
 
@@ -52,18 +49,18 @@ public class MainActivity extends Activity {
 
 //        scrollTimeBar = (HorizontalScrollView) findViewById(R.id.scrollTimeBar);
         iconsLayout = (LinearLayout) findViewById(R.id.iconsLayout);
-        scrollProgramsView = (HorizontalScrollView) findViewById(R.id.scrollProgramsView);
+//        scrollProgramsView = (HorizontalScrollView) findViewById(R.id.scrollProgramsView);
         programsLayout = (LinearLayout) findViewById(R.id.programsLayout);
+//        recyclerView = (RecyclerView) findViewById(R.id.recyclerTest);
 
-        scrollProgramsView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int scrollX = scrollProgramsView.getScrollX();
-//                int scrollY = scrollProgramsView.getScrollY();
-                timeBarView.setPosX(scrollX);
-                return false;
-            }
-        });
+//        scrollProgramsView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                int scrollX = scrollProgramsView.getScrollX();
+//                timeBarView.setPosX(scrollX);
+//                return false;
+//            }
+//        });
 
 
         readData();
@@ -72,9 +69,23 @@ public class MainActivity extends Activity {
 
     private void drawData() {
         for(Channel channel : channels) {
-            ChannelBarView channelBarView = new ChannelBarView(this);
-            channelBarView.setChannel(channel);
-            programsLayout.addView(channelBarView);
+//            ChannelBarView channelBarView = new ChannelBarView(this);
+//            channelBarView.setChannel(channel);
+//            programsLayout.addView(channelBarView);
+
+            RecyclerView recyclerView = new RecyclerView(this);
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            recyclerView.setLayoutParams(params);
+
+            LinearLayoutManager lManager = new LinearLayoutManager(this);
+            lManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+
+            recyclerView.setLayoutManager(lManager);
+            ChannelAdapter adapter = new ChannelAdapter(this, channel);
+            recyclerView.setAdapter(adapter);
+
+            programsLayout.addView(recyclerView);
+
         }
     }
 
