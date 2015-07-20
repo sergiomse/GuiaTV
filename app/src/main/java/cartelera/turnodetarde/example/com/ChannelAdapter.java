@@ -33,6 +33,7 @@ public class ChannelAdapter extends RecyclerView.Adapter {
 
     private Channel channel;
     private DisplayMetrics dm;
+    private int widthExceeded;
 
     public ChannelAdapter(Context context, Channel channel) {
         this.channel = channel;
@@ -42,21 +43,30 @@ public class ChannelAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        return position;
+        return position < channel.getPrograms().size() ? position : -1;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
-        View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.item_program, viewGroup, false);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        if(viewType == -1) {
+            View v = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.item_empty, viewGroup, false);
 
-        Date startDate = channel.getPrograms().get(position).getStart();
-        Date finishDate = channel.getPrograms().get(position).getFinish();
-        long diff = finishDate.getTime() - startDate.getTime();
-        int width = (int) (100 * dm.density * diff / 3600000);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(width, (int) (72 * dm.density));
-        v.setLayoutParams(params);
-        return new ChannelHolder(v);
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(width, (int) (72 * dm.density));
+            v.setLayoutParams(params);
+            return new ChannelHolder(v);
+        } else {
+            View v = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.item_program, viewGroup, false);
+
+            Date startDate = channel.getPrograms().get(viewType).getStart();
+            Date finishDate = channel.getPrograms().get(viewType).getFinish();
+            long diff = finishDate.getTime() - startDate.getTime();
+            int width = (int) (100 * dm.density * diff / 3600000);
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(width, (int) (72 * dm.density));
+            v.setLayoutParams(params);
+            return new ChannelHolder(v);
+        }
     }
 
     @Override
@@ -70,6 +80,6 @@ public class ChannelAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return channel.getPrograms().size();
+        return channel.getPrograms().size() + 1;
     }
 }

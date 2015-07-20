@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
@@ -19,6 +20,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -36,6 +38,7 @@ public class MainActivity extends Activity {
     private LinearLayoutManager lManager;
 
     private int overallXScroll = 0;
+    private DisplayMetrics dm;
 
     private List<Channel> channels = new ArrayList<>();
 
@@ -44,6 +47,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        dm = getResources().getDisplayMetrics();
 
         timeBarView = (TimeBarView) findViewById(R.id.timeBarView);
         Calendar calendar = new GregorianCalendar(2015, 6, 15, 20, 0);
@@ -73,17 +77,32 @@ public class MainActivity extends Activity {
     }
 
     private void drawData() {
+
+        //calculate max width between all the RecyclerView's
+        long maxDiff = 0;
+        for(Channel channel : channels) {
+            Date startDate = channel.getPrograms().get(0).getStart();
+            Date finishDate = channel.getPrograms().get(channel.getPrograms().size() - 1).getFinish();
+            long diff = finishDate.getTime() - startDate.getTime();
+            if(diff > maxDiff) {
+                maxDiff = diff;
+            }
+        }
+        int maxWidth = (int) (100 * dm.density * maxDiff / 3600000);
+
         for(Channel channel : channels) {
 
             MyRecyclerView recyclerView = new MyRecyclerView(this);
+            recyclerView.setMaxWidth(maxWidth);
             recyclerView.setTag(channel.getName());
+
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             recyclerView.setLayoutParams(params);
 
             lManager = new LinearLayoutManager(this);
             lManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-
             recyclerView.setLayoutManager(lManager);
+
             ChannelAdapter adapter = new ChannelAdapter(this, channel);
             recyclerView.setAdapter(adapter);
 
