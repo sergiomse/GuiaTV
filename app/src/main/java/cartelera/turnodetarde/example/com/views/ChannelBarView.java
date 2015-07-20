@@ -12,6 +12,9 @@ import android.view.View;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import cartelera.turnodetarde.example.com.model.Channel;
+import cartelera.turnodetarde.example.com.model.Program;
+
 /**
  * Created by sergiomse@gmail.com on 16/07/2015.
  */

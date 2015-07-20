@@ -4,13 +4,13 @@ package cartelera.turnodetarde.example.com.activities
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.support.v7.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -25,10 +25,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import cartelera.turnodetarde.example.com.Channel;
+import cartelera.turnodetarde.example.com.R;
+import cartelera.turnodetarde.example.com.model.Channel;
 import cartelera.turnodetarde.example.com.views.ChannelAdapter;
 import cartelera.turnodetarde.example.com.views.MyRecyclerView;
-import cartelera.turnodetarde.example.com.R;
 import cartelera.turnodetarde.example.com.views.TimeBarView;
 
 

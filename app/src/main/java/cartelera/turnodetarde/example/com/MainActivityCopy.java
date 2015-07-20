@@ -45,6 +45,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import cartelera.turnodetarde.example.com.model.Channel;
+
 
 public class MainActivityCopy extends Activity {
 
