@@ -2,12 +2,8 @@ package cartelera.turnodetarde.example.com;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
@@ -17,7 +13,6 @@ import com.google.gson.reflect.TypeToken;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -71,11 +66,11 @@ public class MainActivity extends Activity {
     }
 
     private void drawData() {
-        for(Channel channel : channels) {
+//        for(Channel channel : channels) {
             ChannelBarView channelBarView = new ChannelBarView(this);
-            channelBarView.setChannel(channel);
+            channelBarView.setChannels(channels);
             programsLayout.addView(channelBarView);
-        }
+//        }
     }
 
     private void readData() {
