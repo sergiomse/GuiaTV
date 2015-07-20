@@ -33,6 +33,7 @@ public class MainActivity extends Activity {
     private LinearLayout programsLayout;
     private TimeBarView timeBarView;
     private RecyclerView recyclerView;
+    private LinearLayoutManager lManager;
 
     private List<Channel> channels = new ArrayList<>();
 
@@ -76,7 +77,7 @@ public class MainActivity extends Activity {
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             recyclerView.setLayoutParams(params);
 
-            LinearLayoutManager lManager = new LinearLayoutManager(this);
+            lManager = new LinearLayoutManager(this);
             lManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
             recyclerView.setLayoutManager(lManager);
@@ -129,7 +130,7 @@ public class MainActivity extends Activity {
         public boolean onTouch(View v, MotionEvent event) {
 //            int scrollX = ((MyRecyclerView) v).getHorizontalOffset();
             //get first visible item
-            View firstVisibleItem = mLLM.findViewByPosition(mLLM.findFirstVisibleItemPosition());
+            View firstVisibleItem = lManager.findViewByPosition(lManager.findFirstVisibleItemPosition());
 
             int leftScrollXCalculated = 0;
             if (firstItemPosition == 0){
