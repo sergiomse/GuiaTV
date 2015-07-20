@@ -30,7 +30,7 @@
             <!--android:src="@color/corner_background" />-->
 
 
-           <!--<cartelera.turnodetarde.example.com.TimeBarView-->
+           <!--<cartelera.turnodetarde.example.com.views.TimeBarView-->
                <!--android:layout_width="match_parent"-->
                <!--android:layout_height="match_parent"-->
                <!--android:id="@+id/timeBarView"/>-->
@@ -38,7 +38,7 @@
 
     <!--</LinearLayout>-->
 
-    <cartelera.turnodetarde.example.com.TimeBarView
+    <cartelera.turnodetarde.example.com.views.TimeBarView
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:id="@+id/timeBarView"/>

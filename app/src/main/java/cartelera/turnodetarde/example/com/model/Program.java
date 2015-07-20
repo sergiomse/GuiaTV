@@ -1,4 +1,4 @@
-package cartelera.turnodetarde.example.com;
+package cartelera.turnodetarde.example.com.model;
 
 import java.util.Date;
 

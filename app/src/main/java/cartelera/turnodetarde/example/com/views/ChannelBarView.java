@@ -1,4 +1,4 @@
-package cartelera.turnodetarde.example.com;
+package cartelera.turnodetarde.example.com.views;
 
 import android.content.Context;
 import android.graphics.Canvas;

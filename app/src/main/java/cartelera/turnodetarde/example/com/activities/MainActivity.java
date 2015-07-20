@@ -1,4 +1,5 @@
-package cartelera.turnodetarde.example.com;
+package cartelera.turnodetarde.example.com.activities
+        ;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -23,6 +24,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import cartelera.turnodetarde.example.com.Channel;
+import cartelera.turnodetarde.example.com.views.ChannelAdapter;
+import cartelera.turnodetarde.example.com.views.MyRecyclerView;
+import cartelera.turnodetarde.example.com.R;
+import cartelera.turnodetarde.example.com.views.TimeBarView;
 
 
 public class MainActivity extends Activity {

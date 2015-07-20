@@ -1,4 +1,4 @@
-package cartelera.turnodetarde.example.com;
+package cartelera.turnodetarde.example.com.views;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +12,9 @@ import android.widget.TextView;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import cartelera.turnodetarde.example.com.R;
+import cartelera.turnodetarde.example.com.model.Channel;
 
 /**
  * Created by turno de tarde on 17/07/2015.
@@ -43,30 +46,21 @@ public class ChannelAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        return position < channel.getPrograms().size() ? position : -1;
+        return position;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        if(viewType == -1) {
-            View v = LayoutInflater.from(viewGroup.getContext())
-                    .inflate(R.layout.item_empty, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.item_program, viewGroup, false);
 
-            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(width, (int) (72 * dm.density));
-            v.setLayoutParams(params);
-            return new ChannelHolder(v);
-        } else {
-            View v = LayoutInflater.from(viewGroup.getContext())
-                    .inflate(R.layout.item_program, viewGroup, false);
-
-            Date startDate = channel.getPrograms().get(viewType).getStart();
-            Date finishDate = channel.getPrograms().get(viewType).getFinish();
-            long diff = finishDate.getTime() - startDate.getTime();
-            int width = (int) (100 * dm.density * diff / 3600000);
-            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(width, (int) (72 * dm.density));
-            v.setLayoutParams(params);
-            return new ChannelHolder(v);
-        }
+        Date startDate = channel.getPrograms().get(viewType).getStart();
+        Date finishDate = channel.getPrograms().get(viewType).getFinish();
+        long diff = finishDate.getTime() - startDate.getTime();
+        int width = (int) (100 * dm.density * diff / 3600000);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(width, (int) (72 * dm.density));
+        v.setLayoutParams(params);
+        return new ChannelHolder(v);
     }
 
     @Override
@@ -80,6 +74,6 @@ public class ChannelAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return channel.getPrograms().size() + 1;
+        return channel.getPrograms().size();
     }
 }
