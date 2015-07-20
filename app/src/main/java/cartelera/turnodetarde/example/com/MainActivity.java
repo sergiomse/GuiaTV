@@ -3,7 +3,7 @@ package cartelera.turnodetarde.example.com;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.MotionEvent;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
@@ -27,13 +27,15 @@ public class MainActivity extends Activity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private HorizontalScrollView scrollTimeBar;
+//    private HorizontalScrollView scrollTimeBar;
     private LinearLayout iconsLayout;
     private HorizontalScrollView scrollProgramsView;
     private LinearLayout programsLayout;
     private TimeBarView timeBarView;
     private RecyclerView recyclerView;
     private LinearLayoutManager lManager;
+
+    private int overallXScroll = 0;
 
     private List<Channel> channels = new ArrayList<>();
 
@@ -74,6 +76,7 @@ public class MainActivity extends Activity {
         for(Channel channel : channels) {
 
             MyRecyclerView recyclerView = new MyRecyclerView(this);
+            recyclerView.setTag(channel.getName());
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             recyclerView.setLayoutParams(params);
 
@@ -84,7 +87,7 @@ public class MainActivity extends Activity {
             ChannelAdapter adapter = new ChannelAdapter(this, channel);
             recyclerView.setAdapter(adapter);
 
-            recyclerView.setOnTouchListener(onChannelTouchListener);
+            recyclerView.setOnScrollListener(onChannelScrollListener);
             programsLayout.addView(recyclerView);
 
         }
@@ -124,30 +127,30 @@ public class MainActivity extends Activity {
     }
 
 
-    private class OnChannelTouchListener implements View.OnTouchListener {
+    private class OnChannelScrollListener extends OnScrollListener {
 
         @Override
-        public boolean onTouch(View v, MotionEvent event) {
-//            int scrollX = ((MyRecyclerView) v).getHorizontalOffset();
-            //get first visible item
-            View firstVisibleItem = lManager.findViewByPosition(lManager.findFirstVisibleItemPosition());
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
 
-            int leftScrollXCalculated = 0;
-            if (firstItemPosition == 0){
-                //if first item, get width of headerview (getLeft() < 0, that's why I Use Math.abs())
-                leftScrollXCalculated = Math.abs(firstVisibleItem.getLeft());
-            }
-            else{
+            overallXScroll = overallXScroll + dx;
 
-                //X-Position = Gap to the right + Number of cells * width - cell offset of current first visible item
-                //(mHeaderItemWidth includes already width of one cell, that's why I have to subtract it again)
-                leftScrollXCalculated = (mHeaderItemWidth - mCellWidth) + firstItemPosition  * mCellWidth + firstVisibleItem.getLeft();
+            timeBarView.scrollTo(overallXScroll, 0);
+
+            int childCount = programsLayout.getChildCount();
+            for(int i=0; i<childCount; i++) {
+                View v = programsLayout.getChildAt(i);
+                if(v instanceof MyRecyclerView) {
+                    MyRecyclerView rv = (MyRecyclerView) v;
+                    if(rv != recyclerView) {
+                        rv.scrollBy(dx, 0);
+                    }
+                }
             }
-            timeBarView.setPosX(scrollX);
-            return false;
         }
+
     }
 
-    private OnChannelTouchListener onChannelTouchListener = new OnChannelTouchListener();
+    private OnChannelScrollListener onChannelScrollListener = new OnChannelScrollListener();
 
 }
