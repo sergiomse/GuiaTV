@@ -97,7 +97,5 @@ public class ChannelBarView extends View {
             totalWidth += width;
         }
 
-
-        canvas.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1, pntLines);
     }
 }

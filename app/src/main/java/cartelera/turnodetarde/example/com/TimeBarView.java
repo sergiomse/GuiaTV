@@ -92,6 +92,7 @@ public class TimeBarView extends View {
 //        pntLines.setColor(Color.BLACK);
         pntText.setColor(Color.BLACK);
         pntText.setTextSize(14 * dm.density);
+        pntText.setAntiAlias(true);
 
         leftGradient = getResources().getDrawable(R.drawable.time_gradient);
         leftGradient.setBounds(0, 0, (int) (72 * dm.density), (int) (48 * dm.density));
