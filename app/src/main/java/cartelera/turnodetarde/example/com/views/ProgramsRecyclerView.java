@@ -8,7 +8,7 @@ import android.util.DisplayMetrics;
 /**
  * Created by turno de tarde on 17/07/2015.
  */
-public class MyRecyclerView extends RecyclerView {
+public class ProgramsRecyclerView extends RecyclerView {
 
     private int maxWidth;
     private int widthExceede;
@@ -27,17 +27,17 @@ public class MyRecyclerView extends RecyclerView {
     private DisplayMetrics dm;
 
 
-    public MyRecyclerView(Context context) {
+    public ProgramsRecyclerView(Context context) {
         super(context);
         init();
     }
 
-    public MyRecyclerView(Context context, AttributeSet attrs) {
+    public ProgramsRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public MyRecyclerView(Context context, AttributeSet attrs, int defStyle) {
+    public ProgramsRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }

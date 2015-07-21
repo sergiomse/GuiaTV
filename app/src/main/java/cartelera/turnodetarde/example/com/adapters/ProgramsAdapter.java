@@ -1,4 +1,4 @@
-package cartelera.turnodetarde.example.com.views;
+package cartelera.turnodetarde.example.com.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +21,7 @@ import cartelera.turnodetarde.example.com.model.ProgramComponentList;
 /**
  * Created by turno de tarde on 17/07/2015.
  */
-public class ChannelAdapter extends RecyclerView.Adapter {
+public class ProgramsAdapter extends RecyclerView.Adapter {
 
     public static class ChannelHolder extends RecyclerView.ViewHolder {
 
@@ -39,7 +39,7 @@ public class ChannelAdapter extends RecyclerView.Adapter {
     private ProgramComponentList programComponentList;
     private DisplayMetrics dm;
 
-    public ChannelAdapter(Context context, ProgramComponentList programComponentList) {
+    public ProgramsAdapter(Context context, ProgramComponentList programComponentList) {
         this.programComponentList = programComponentList;
         dm = context.getResources().getDisplayMetrics();
     }
