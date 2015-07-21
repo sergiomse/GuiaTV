@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -14,9 +15,11 @@ public class ChannelList extends ArrayList<Channel> {
 
     private final static SimpleDateFormat sdf = new SimpleDateFormat("HH.mm");
 
+    private final static int DP_WIDTH_PER_HOUR = 100;
+
     public Map<Channel, ProgramComponentList> getProgramComponents() {
 
-        Map<Channel, ProgramComponentList> map = new HashMap<>();
+        Map<Channel, ProgramComponentList> map = new LinkedHashMap<>();
 
         int maxWidthDp = maxWidthDp();
 
@@ -24,32 +27,34 @@ public class ChannelList extends ArrayList<Channel> {
             ProgramComponentList programComponentList = new ProgramComponentList();
 
             int finish = 0;
-            int start = 0;
+            int offset = 0;
+            int totalWidth = 0;
 
             Date startDate = channel.getPrograms().get(0).getStart();
             Calendar cal = Calendar.getInstance();
             cal.setTime(startDate);
             cal.set(Calendar.MINUTE, 0);
-            start = (int) (cal.getTime().getTime() / 3600000);
+            offset = (int) (cal.getTime().getTime() / 3600000.0 * DP_WIDTH_PER_HOUR);
 
             ProgramComponent programComponent = null;
 
             for(Program program : channel.getPrograms()) {
 
-                finish = (int) (program.getFinish().getTime() / 3600000);
+                finish = (int) (program.getFinish().getTime() / 3600000.0 * DP_WIDTH_PER_HOUR);
 
                 programComponent = new ProgramComponent();
-                programComponent.setDpWidth(finish - start);
+                programComponent.setDpWidth(finish - offset);
                 programComponent.setName(program.getName());
                 programComponent.setTime(sdf.format(startDate));
 
+                totalWidth += finish - offset;
                 programComponentList.add(programComponent);
-                start = finish;
+                offset = finish;
             }
 
-            if(finish < maxWidthDp) {
+            if(totalWidth < maxWidthDp) {
                 EmptyProgramComponent emptyProgramComponent = new EmptyProgramComponent();
-                emptyProgramComponent.setDpWidth(maxWidthDp - finish);
+                emptyProgramComponent.setDpWidth(maxWidthDp - totalWidth);
                 programComponentList.add(emptyProgramComponent);
             }
 
@@ -68,7 +73,7 @@ public class ChannelList extends ArrayList<Channel> {
             startDate = channel.getPrograms().get(0).getStart();
             finishDate = channel.getPrograms().get(channel.getPrograms().size() - 1).getFinish();
             diff = finishDate.getTime() - startDate.getTime();
-            width = (int) (100 * diff / 3600000);
+            width = (int) (100.0 * diff / 3600000.0);
             if(width > maxWidthDp) {
                 maxWidthDp = width;
             }

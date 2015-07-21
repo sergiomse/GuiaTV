@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
@@ -24,9 +25,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 
 import cartelera.turnodetarde.example.com.R;
 import cartelera.turnodetarde.example.com.model.Channel;
+import cartelera.turnodetarde.example.com.model.ChannelList;
+import cartelera.turnodetarde.example.com.model.ProgramComponentList;
 import cartelera.turnodetarde.example.com.views.ChannelAdapter;
 import cartelera.turnodetarde.example.com.views.MyRecyclerView;
 import cartelera.turnodetarde.example.com.views.TimeBarView;
@@ -36,7 +40,6 @@ public class MainActivity extends Activity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-//    private HorizontalScrollView scrollTimeBar;
     private LinearLayout iconsLayout;
     private HorizontalScrollView scrollProgramsView;
     private LinearLayout programsLayout;
@@ -47,7 +50,7 @@ public class MainActivity extends Activity {
     private int overallXScroll = 0;
     private DisplayMetrics dm;
 
-    private List<Channel> channels = new ArrayList<>();
+    private ChannelList channels = new ChannelList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,20 +66,9 @@ public class MainActivity extends Activity {
         timeBarView.setFinalDate(calendar.getTime());
         timeBarView.invalidate();
 
-//        scrollTimeBar = (HorizontalScrollView) findViewById(R.id.scrollTimeBar);
         iconsLayout = (LinearLayout) findViewById(R.id.iconsLayout);
-//        scrollProgramsView = (HorizontalScrollView) findViewById(R.id.scrollProgramsView);
         programsLayout = (LinearLayout) findViewById(R.id.programsLayout);
-//        recyclerView = (RecyclerView) findViewById(R.id.recyclerTest);
 
-//        scrollProgramsView.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                int scrollX = scrollProgramsView.getScrollX();
-//                timeBarView.setPosX(scrollX);
-//                return false;
-//            }
-//        });
 
 
         readData();
@@ -85,22 +77,13 @@ public class MainActivity extends Activity {
 
     private void drawData() {
 
-        //calculate max width between all the RecyclerView's
-        long maxDiff = 0;
-        for(Channel channel : channels) {
-            Date startDate = channel.getPrograms().get(0).getStart();
-            Date finishDate = channel.getPrograms().get(channel.getPrograms().size() - 1).getFinish();
-            long diff = finishDate.getTime() - startDate.getTime();
-            if(diff > maxDiff) {
-                maxDiff = diff;
-            }
-        }
-        int maxWidth = (int) (100 * dm.density * maxDiff / 3600000);
+        Map<Channel, ProgramComponentList> map = channels.getProgramComponents();
 
-        for(Channel channel : channels) {
+        for(Map.Entry<Channel, ProgramComponentList> entry : map.entrySet()) {
+            Channel channel = entry.getKey();
+            ProgramComponentList programComponentList = entry.getValue();
 
             MyRecyclerView recyclerView = new MyRecyclerView(this);
-            recyclerView.setMaxWidth(maxWidth);
             recyclerView.setTag(channel.getName());
 
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -110,13 +93,13 @@ public class MainActivity extends Activity {
             lManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             recyclerView.setLayoutManager(lManager);
 
-            ChannelAdapter adapter = new ChannelAdapter(this, channel);
+            ChannelAdapter adapter = new ChannelAdapter(this, programComponentList);
             recyclerView.setAdapter(adapter);
 
             recyclerView.setOnScrollListener(onChannelScrollListener);
             programsLayout.addView(recyclerView);
-
         }
+
     }
 
     private void readData() {
@@ -148,7 +131,7 @@ public class MainActivity extends Activity {
         }
 
         Gson gson = new Gson();
-        channels = gson.fromJson(json.toString(), new TypeToken<List<Channel>>(){}.getType());
+        channels = gson.fromJson(json.toString(), new TypeToken<ChannelList>(){}.getType());
         Collections.sort(channels);
     }
 
@@ -169,7 +152,9 @@ public class MainActivity extends Activity {
                 if(v instanceof MyRecyclerView) {
                     MyRecyclerView rv = (MyRecyclerView) v;
                     if(rv != recyclerView) {
+                        rv.setOnScrollListener(null);
                         rv.scrollBy(dx, 0);
+                        rv.setOnScrollListener(onChannelScrollListener);
                     }
                 }
             }
