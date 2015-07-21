@@ -1,4 +1,4 @@
-package cartelera.turnodetarde.example.com;
+package cartelera.turnodetarde.example.com.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -17,6 +17,8 @@ import android.widget.TextView;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import cartelera.turnodetarde.example.com.R;
 
 /**
  * Created by turno de tarde on 15/07/2015.

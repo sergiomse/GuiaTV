@@ -1,4 +1,4 @@
-package cartelera.turnodetarde.example.com;
+package cartelera.turnodetarde.example.com.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,6 +12,9 @@ import android.view.View;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import cartelera.turnodetarde.example.com.model.Channel;
+import cartelera.turnodetarde.example.com.model.Program;
 
 /**
  * Created by sergiomse@gmail.com on 16/07/2015.

@@ -1,6 +1,8 @@
-package cartelera.turnodetarde.example.com;
+package cartelera.turnodetarde.example.com.model;
 
 import java.util.List;
+
+
 
 /**
  * Created by turno de tarde on 07/07/2015.
