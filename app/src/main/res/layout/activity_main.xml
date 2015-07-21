@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFFFFF"
+    android:background="@color/empty_program_color"
     tools:context=".MainActivity">
 
     <android.support.v7.widget.Toolbar
@@ -19,24 +19,6 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="48dp"-->
-        <!--android:orientation="horizontal">-->
-
-        <!--<ImageView-->
-            <!--android:layout_width="70dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:src="@color/corner_background" />-->
-
-
-           <!--<cartelera.turnodetarde.example.com.views.TimeBarView-->
-               <!--android:layout_width="match_parent"-->
-               <!--android:layout_height="match_parent"-->
-               <!--android:id="@+id/timeBarView"/>-->
-
-
-    <!--</LinearLayout>-->
 
     <cartelera.turnodetarde.example.com.views.TimeBarView
         android:layout_width="match_parent"
@@ -58,7 +40,8 @@
                 android:id="@+id/iconsLayout"
                 android:layout_width="72dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@drawable/tv_icon_background">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -79,33 +62,6 @@
                 android:id="@+id/programsLayout"
                 ></LinearLayout>
 
-<!--            <android.support.v7.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/recyclerTest"
-                />-->
-
-<!--            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/scrollProgramsView"
-                android:scrollbars="none">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                   &lt;!&ndash; <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:id="@+id/programsLayout" >&ndash;&gt;
-
-                    &lt;!&ndash;                   </LinearLayout>&ndash;&gt;
-
-
-                </FrameLayout>
-            </HorizontalScrollView>-->
 
         </LinearLayout>
     </ScrollView>

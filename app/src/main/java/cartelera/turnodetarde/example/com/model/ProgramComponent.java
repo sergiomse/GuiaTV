@@ -5,8 +5,18 @@ package cartelera.turnodetarde.example.com.model;
  */
 public class ProgramComponent extends ProgramComponentBase {
 
+    private int id;
     private String time;
     private String name;
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTime() {
         return time;

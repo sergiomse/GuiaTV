@@ -6,11 +6,13 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Calendar;
 import java.util.Date;
 
+import cartelera.turnodetarde.example.com.OnProgramClickListener;
 import cartelera.turnodetarde.example.com.R;
 import cartelera.turnodetarde.example.com.model.Channel;
 import cartelera.turnodetarde.example.com.model.EmptyProgramComponent;
@@ -25,11 +27,13 @@ public class ProgramsAdapter extends RecyclerView.Adapter {
 
     public static class ChannelHolder extends RecyclerView.ViewHolder {
 
+        public LinearLayout layoutProgramContainer;
         public TextView tvTime;
         public TextView tvName;
 
         public ChannelHolder(View itemView) {
             super(itemView);
+            layoutProgramContainer = (LinearLayout) itemView.findViewById(R.id.layoutProgramContainer);
             tvTime = (TextView) itemView.findViewById(R.id.tvTime);
             tvName = (TextView) itemView.findViewById(R.id.tvProgramName);
         }
@@ -38,10 +42,12 @@ public class ProgramsAdapter extends RecyclerView.Adapter {
 
     private ProgramComponentList programComponentList;
     private DisplayMetrics dm;
+    private OnProgramClickListener onProgramClickListener;
 
     public ProgramsAdapter(Context context, ProgramComponentList programComponentList) {
         this.programComponentList = programComponentList;
         dm = context.getResources().getDisplayMetrics();
+        onProgramClickListener = new OnProgramClickListener();
     }
 
 
@@ -49,6 +55,7 @@ public class ProgramsAdapter extends RecyclerView.Adapter {
     public int getItemViewType(int position) {
         return position;
     }
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -70,12 +77,15 @@ public class ProgramsAdapter extends RecyclerView.Adapter {
         return new ChannelHolder(v);
     }
 
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         ChannelHolder holder = (ChannelHolder) viewHolder;
 
         ProgramComponentBase programComponentBase = programComponentList.get(position);
         if(programComponentBase instanceof ProgramComponent) {
+            holder.layoutProgramContainer.setTag(((ProgramComponent) programComponentList.get(position)).getId());
+            holder.layoutProgramContainer.setOnClickListener(onProgramClickListener);
             holder.tvTime.setText(((ProgramComponent) programComponentList.get(position)).getTime());
             holder.tvName.setText(((ProgramComponent) programComponentList.get(position)).getName());
         }

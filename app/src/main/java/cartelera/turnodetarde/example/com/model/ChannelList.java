@@ -67,6 +67,7 @@ public class ChannelList extends ArrayList<Channel> {
                 finish = (int) (program.getFinish().getTime() / 3600000.0 * DP_WIDTH_PER_HOUR);
 
                 programComponent = new ProgramComponent();
+                programComponent.setId(program.getId());
                 programComponent.setDpWidth(finish - offset);
                 programComponent.setName(program.getName());
                 programComponent.setTime(sdf.format(startDate));
@@ -110,5 +111,18 @@ public class ChannelList extends ArrayList<Channel> {
         }
 
         return maxWidthDp;
+    }
+
+
+    public Program getProgramById(int id) {
+        for(Channel channel : this) {
+            for(Program program : channel.getPrograms()) {
+                if(program.getId() == id) {
+                    return program;
+                }
+            }
+        }
+
+        return null;
     }
 }

@@ -10,20 +10,6 @@ import android.util.DisplayMetrics;
  */
 public class ProgramsRecyclerView extends RecyclerView {
 
-    private int maxWidth;
-    private int widthExceede;
-
-    public int getMaxWidth() {
-        return maxWidth;
-    }
-
-    public void setMaxWidth(int maxWidth) {
-        this.maxWidth = maxWidth;
-    }
-
-
-
-
     private DisplayMetrics dm;
 
 
@@ -51,10 +37,6 @@ public class ProgramsRecyclerView extends RecyclerView {
     protected void onMeasure(int widthSpec, int heightSpec) {
         int height = (int) (72 * dm.density);
         heightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
-
-//        widthSpec = MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.EXACTLY);
-        int width = MeasureSpec.getSize(widthSpec);
-
         setMeasuredDimension(widthSpec, heightSpec);
     }
 }

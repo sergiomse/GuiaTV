@@ -5,19 +5,25 @@
 		"pos":0,
 		"programs":[
 			{
-			  	"start":"Jul 14, 2015 0:00:00 PM",
-				"finish":"Jul 14, 2015 1:00:00 PM",
-				"name":"Cine de barrio"
+              "id": 1,
+              "start":"Jul 14, 2015 0:00:00 PM",
+              "finish":"Jul 14, 2015 1:00:00 PM",
+              "name":"Juego de tronos",
+              "detailsUrl": "https://es.wikipedia.org/wiki/Juego_de_tronos_(serie_de_televisi%C3%B3n)"
 			},
 			{
-			  	"start":"Jul 14, 2015 1:00:00 PM",
-				"finish":"Jul 14, 2015 2:00:00 PM",
-				"name":"Corazon Corazon"
+              "id": 2,
+              "start":"Jul 14, 2015 1:00:00 PM",
+              "finish":"Jul 14, 2015 2:00:00 PM",
+              "name":"Flash",
+              "detailsUrl": "https://es.wikipedia.org/wiki/The_Flash_(serie_de_televisi%C3%B3n_de_2014)"
 			},
 			{
-			  	"start":"Jul 14, 2015 2:00:00 PM",
-				"finish":"Jul 14, 2015 2:30:00 PM",
-				"name":"Corazon Corazon"
+              "id": 3,
+              "start":"Jul 14, 2015 2:00:00 PM",
+              "finish":"Jul 14, 2015 2:30:00 PM",
+              "name":"Telediario",
+              "detailsUrl": "https://es.wikipedia.org/wiki/Telediario"
 			}
 		]
 	},
@@ -28,31 +34,37 @@
     "pos":1,
     "programs":[
       {
+        "id": 4,
         "start":"Jul 14, 2015 0:00:00 PM",
         "finish":"Jul 14, 2015 0:30:00 PM",
         "name":"documental"
       },
       {
+        "id": 5,
         "start":"Jul 14, 2015 0:30:00 PM",
         "finish":"Jul 14, 2015 1:00:00 PM",
         "name":"noticias"
       },
       {
+        "id": 6,
         "start":"Jul 14, 2015 1:00:00 PM",
         "finish":"Jul 14, 2015 2:30:00 PM",
         "name":"peliculon"
       },
       {
+        "id": 7,
         "start":"Jul 14, 2015 2:30:00 PM",
         "finish":"Jul 14, 2015 3:30:00 PM",
         "name":"documental"
       },
       {
+        "id": 8,
         "start":"Jul 14, 2015 3:30:00 PM",
         "finish":"Jul 14, 2015 4:00:00 PM",
         "name":"noticias"
       },
       {
+        "id": 9,
         "start":"Jul 14, 2015 4:00:00 PM",
         "finish":"Jul 14, 2015 4:30:00 PM",
         "name":"peliculon"

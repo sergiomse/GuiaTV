@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
@@ -19,20 +18,17 @@ import com.google.gson.reflect.TypeToken;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Map;
 
 import cartelera.turnodetarde.example.com.R;
+import cartelera.turnodetarde.example.com.adapters.ProgramsAdapter;
 import cartelera.turnodetarde.example.com.model.Channel;
 import cartelera.turnodetarde.example.com.model.ChannelList;
 import cartelera.turnodetarde.example.com.model.ProgramComponentList;
-import cartelera.turnodetarde.example.com.views.ChannelAdapter;
-import cartelera.turnodetarde.example.com.views.MyRecyclerView;
+import cartelera.turnodetarde.example.com.views.ProgramsRecyclerView;
 import cartelera.turnodetarde.example.com.views.TimeBarView;
 
 
@@ -51,6 +47,14 @@ public class MainActivity extends Activity {
     private DisplayMetrics dm;
 
     private ChannelList channels = new ChannelList();
+
+    public ChannelList getChannels() {
+        return channels;
+    }
+
+//    public void setChannels(ChannelList channels) {
+//        this.channels = channels;
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +89,7 @@ public class MainActivity extends Activity {
             Channel channel = entry.getKey();
             ProgramComponentList programComponentList = entry.getValue();
 
-            MyRecyclerView recyclerView = new MyRecyclerView(this);
+            ProgramsRecyclerView recyclerView = new ProgramsRecyclerView(this);
             recyclerView.setTag(channel.getName());
 
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -95,7 +99,7 @@ public class MainActivity extends Activity {
             lManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             recyclerView.setLayoutManager(lManager);
 
-            ChannelAdapter adapter = new ChannelAdapter(this, programComponentList);
+            ProgramsAdapter adapter = new ProgramsAdapter(this, programComponentList);
             recyclerView.setAdapter(adapter);
 
             recyclerView.setOnScrollListener(onChannelScrollListener);
@@ -151,8 +155,8 @@ public class MainActivity extends Activity {
             int childCount = programsLayout.getChildCount();
             for(int i=0; i<childCount; i++) {
                 View v = programsLayout.getChildAt(i);
-                if(v instanceof MyRecyclerView) {
-                    MyRecyclerView rv = (MyRecyclerView) v;
+                if(v instanceof ProgramsRecyclerView) {
+                    ProgramsRecyclerView rv = (ProgramsRecyclerView) v;
                     if(rv != recyclerView) {
                         rv.setOnScrollListener(null);
                         rv.scrollBy(dx, 0);
