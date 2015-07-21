@@ -28,19 +28,10 @@ public class TimeBarView extends View {
 
     private static final String TAG = TimeBarView.class.getSimpleName();
 
-    private int posX;
     private Date initialDate;
     private Date finalDate;
     private int totalWidth;
 
-//    public int getPosX() {
-//        return posX;
-//    }
-//
-//    public void setPosX(int posX) {
-//        this.posX = -posX;
-//        invalidate();
-//    }
 
     public Date getInitialDate() {
         return initialDate;
@@ -114,12 +105,6 @@ public class TimeBarView extends View {
     }
 
 
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        setMeasuredDimension(MeasureSpec.makeMeasureSpec(totalWidth, MeasureSpec.EXACTLY), heightMeasureSpec);
-//    }
-
-
     @Override
     protected void onDraw(Canvas canvas) {
         int sx = getScrollX();
@@ -143,28 +128,19 @@ public class TimeBarView extends View {
             Rect bounds = new Rect();
             pntText.getTextBounds(initialHourString, 0, initialHourString.length(), bounds);
 
-//            Log.d(TAG, "sx = " + sx + ", getWidth() = " + getWidth() + ", x = " + x + ", bounds.width() / 2 ) = " + bounds.width() / 2);
-//            Log.d(TAG, "sx + getWidth() < x + bounds.width() / 2   " + String.valueOf(sx + getWidth()) + " < " + String.valueOf(x + bounds.width() / 2));
             int textPos = 0;
             if(sx + getWidth() < x - bounds.width() / 2) {
-
                 pntText.setAlpha(0);
-//                canvas.drawText(initialHourString, posX, getHeight() - 15 * dm.density, pntText);
 
             } else if(sx + getWidth() > x - bounds.width() / 2 && sx + getWidth() < x + bounds.width() / 2) {
                 pntText.setAlpha((int) (255 / bounds.width() * (sx + getWidth() - x + bounds.width() / 2)));
                 textPos = sx +  getWidth() - bounds.width();
-//                canvas.drawText(initialHourString, posX, getHeight() - 15 * dm.density, pntText);
-//                canvas.drawText(initialHourString, x + leftPadding - bounds.width() / 2, getHeight() - 15 * dm.density, pntText);
+
             } else {
                 pntText.setAlpha(255);
                 textPos = (int) (x - bounds.width() / 2);
-//                canvas.drawText(initialHourString, x + leftPadding - bounds.width() / 2, getHeight() - 15 * dm.density, pntText);
             }
-//            Log.d(TAG, "Alpha = " + pntText.getAlpha());
             canvas.drawText(initialHourString, textPos, getHeight() - 15 * dm.density, pntText);
-//            pntText.setAlpha(255);
-//            canvas.drawText(initialHourString, x + leftPadding - bounds.width() / 2, getHeight() - 15 * dm.density, pntText);
 
             leftGradient.draw(canvas);
 
