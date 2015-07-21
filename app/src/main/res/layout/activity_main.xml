@@ -56,7 +56,7 @@
 
             <LinearLayout
                 android:id="@+id/iconsLayout"
-                android:layout_width="71dp"
+                android:layout_width="72dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 

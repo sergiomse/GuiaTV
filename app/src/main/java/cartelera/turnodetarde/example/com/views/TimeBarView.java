@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewParent;
@@ -25,18 +26,21 @@ import cartelera.turnodetarde.example.com.R;
  */
 public class TimeBarView extends View {
 
+    private static final String TAG = TimeBarView.class.getSimpleName();
+
     private int posX;
     private Date initialDate;
     private Date finalDate;
+    private int totalWidth;
 
-    public int getPosX() {
-        return posX;
-    }
-
-    public void setPosX(int posX) {
-        this.posX = -posX;
-        invalidate();
-    }
+//    public int getPosX() {
+//        return posX;
+//    }
+//
+//    public void setPosX(int posX) {
+//        this.posX = -posX;
+//        invalidate();
+//    }
 
     public Date getInitialDate() {
         return initialDate;
@@ -54,9 +58,18 @@ public class TimeBarView extends View {
         this.finalDate = finalDate;
     }
 
+    public int getTotalWidth() {
+        return totalWidth;
+    }
+
+    public void setTotalWidth(int totalWidth) {
+        this.totalWidth = totalWidth;
+    }
 
 
-    
+
+
+
     private DisplayMetrics dm;
     private int leftPadding;
 
@@ -81,6 +94,7 @@ public class TimeBarView extends View {
         init();
     }
 
+
     private void init() {
         setWillNotDraw(false);
         setHorizontalScrollBarEnabled(false);
@@ -91,7 +105,6 @@ public class TimeBarView extends View {
 
         pntBackground.setColor(Color.rgb(236, 236, 236));
         pntLines.setColor(Color.rgb(222, 222, 222));
-//        pntLines.setColor(Color.BLACK);
         pntText.setColor(Color.BLACK);
         pntText.setTextSize(14 * dm.density);
         pntText.setAntiAlias(true);
@@ -100,26 +113,21 @@ public class TimeBarView extends View {
         leftGradient.setBounds(0, 0, (int) (72 * dm.density), (int) (48 * dm.density));
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-//        if(initialDate != null && finalDate != null) {
-//            long millisDiff = finalDate.getTime() - initialDate.getTime();
-//            double hoursDiff = millisDiff / 3600000;
-//            totalWidth = (int) (hoursDiff * 100 * dm.density);
-//        } else {
-//            totalWidth = 0;
-//        }
+//    @Override
+//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//        setMeasuredDimension(MeasureSpec.makeMeasureSpec(totalWidth, MeasureSpec.EXACTLY), heightMeasureSpec);
+//    }
 
-
-        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
-    }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawRect(0, 0, getWidth(), getHeight(), pntBackground);
+        int sx = getScrollX();
 
-        float x = posX;
+        //background
+        canvas.drawRect(0, 0, sx + getWidth(), getHeight(), pntBackground);
+
+        float x = leftPadding;
         Calendar cal = Calendar.getInstance();
         if(initialDate == null) {
             initialDate = new Date();
@@ -127,23 +135,36 @@ public class TimeBarView extends View {
         cal.setTime(initialDate);
         int initialHour = cal.get(Calendar.HOUR_OF_DAY);
         float increment = 100 * dm.density;
-        while(x < getWidth()) {
-            canvas.drawLine(x + leftPadding, (float) getHeight(), x + leftPadding, getHeight() - 5 * dm.density, pntLines);
+
+        while(x < getWidth() + sx + 100) {
+            canvas.drawLine(x, (float) getHeight(), x, getHeight() - 5 * dm.density, pntLines);
 
             String initialHourString = String.valueOf(initialHour) + ":00";
             Rect bounds = new Rect();
             pntText.getTextBounds(initialHourString, 0, initialHourString.length(), bounds);
 
-//            if(posX > x - bounds.width() / 2 && posX < x + bounds.width() / 2) {
-//                pntText.setAlpha((int) (255 * (1 - (posX - x) / bounds.width())));
-//                canvas.drawText(initialHourString, posX, getHeight() - 15 * dm.density, pntText);
-//            } else {
-//                pntText.setAlpha(255);
-//                canvas.drawText(initialHourString, x - bounds.width() / 2, getHeight() - 15 * dm.density, pntText);
-//            }
+//            Log.d(TAG, "sx = " + sx + ", getWidth() = " + getWidth() + ", x = " + x + ", bounds.width() / 2 ) = " + bounds.width() / 2);
+//            Log.d(TAG, "sx + getWidth() < x + bounds.width() / 2   " + String.valueOf(sx + getWidth()) + " < " + String.valueOf(x + bounds.width() / 2));
+            int textPos = 0;
+            if(sx + getWidth() < x - bounds.width() / 2) {
 
-            pntText.setAlpha(255);
-            canvas.drawText(initialHourString, x + leftPadding - bounds.width() / 2, getHeight() - 15 * dm.density, pntText);
+                pntText.setAlpha(0);
+//                canvas.drawText(initialHourString, posX, getHeight() - 15 * dm.density, pntText);
+
+            } else if(sx + getWidth() > x - bounds.width() / 2 && sx + getWidth() < x + bounds.width() / 2) {
+                pntText.setAlpha((int) (255 / bounds.width() * (sx + getWidth() - x + bounds.width() / 2)));
+                textPos = sx +  getWidth() - bounds.width();
+//                canvas.drawText(initialHourString, posX, getHeight() - 15 * dm.density, pntText);
+//                canvas.drawText(initialHourString, x + leftPadding - bounds.width() / 2, getHeight() - 15 * dm.density, pntText);
+            } else {
+                pntText.setAlpha(255);
+                textPos = (int) (x - bounds.width() / 2);
+//                canvas.drawText(initialHourString, x + leftPadding - bounds.width() / 2, getHeight() - 15 * dm.density, pntText);
+            }
+//            Log.d(TAG, "Alpha = " + pntText.getAlpha());
+            canvas.drawText(initialHourString, textPos, getHeight() - 15 * dm.density, pntText);
+//            pntText.setAlpha(255);
+//            canvas.drawText(initialHourString, x + leftPadding - bounds.width() / 2, getHeight() - 15 * dm.density, pntText);
 
             leftGradient.draw(canvas);
 

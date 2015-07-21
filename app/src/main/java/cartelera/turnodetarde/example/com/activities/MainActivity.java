@@ -79,6 +79,8 @@ public class MainActivity extends Activity {
 
         Map<Channel, ProgramComponentList> map = channels.getProgramComponents();
 
+        timeBarView.setTotalWidth((int) ((channels.getMaxWidthDp() + 72) * dm.density));
+
         for(Map.Entry<Channel, ProgramComponentList> entry : map.entrySet()) {
             Channel channel = entry.getKey();
             ProgramComponentList programComponentList = entry.getValue();

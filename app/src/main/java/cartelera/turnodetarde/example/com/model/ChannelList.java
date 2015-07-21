@@ -13,6 +13,30 @@ import java.util.Map;
  */
 public class ChannelList extends ArrayList<Channel> {
 
+    private int maxWidthDp;
+    private Date maxDate = new Date();
+
+    public int getMaxWidthDp() {
+        return maxWidthDp;
+    }
+
+    public void setMaxWidthDp(int maxWidthDp) {
+        this.maxWidthDp = maxWidthDp;
+    }
+
+    public Date getMaxDate() {
+        return maxDate;
+    }
+
+    public void setMaxDate(Date maxDate) {
+        this.maxDate = maxDate;
+    }
+
+
+
+
+
+
     private final static SimpleDateFormat sdf = new SimpleDateFormat("HH.mm");
 
     private final static int DP_WIDTH_PER_HOUR = 100;
@@ -21,7 +45,7 @@ public class ChannelList extends ArrayList<Channel> {
 
         Map<Channel, ProgramComponentList> map = new LinkedHashMap<>();
 
-        int maxWidthDp = maxWidthDp();
+        maxWidthDp = maxWidthDp();
 
         for(Channel channel : this) {
             ProgramComponentList programComponentList = new ProgramComponentList();
@@ -59,7 +83,13 @@ public class ChannelList extends ArrayList<Channel> {
             }
 
             map.put(channel, programComponentList);
+
+            Date lastDateChannel = channel.getPrograms().get(channel.getPrograms().size() - 1).getFinish();
+            if(lastDateChannel.compareTo(maxDate) > 0) {
+                maxDate = lastDateChannel;
+            }
         }
+
         return map;
     }
 
