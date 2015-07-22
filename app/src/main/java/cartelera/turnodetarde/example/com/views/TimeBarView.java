@@ -121,6 +121,9 @@ public class TimeBarView extends View {
         int initialHour = cal.get(Calendar.HOUR_OF_DAY);
         float increment = 100 * dm.density;
 
+        boolean isDayChange = false;
+        int dayChangePos = 0;
+
         while(x < getWidth() + sx + 100) {
             canvas.drawLine(x, (float) getHeight(), x, getHeight() - 5 * dm.density, pntLines);
 
@@ -145,6 +148,12 @@ public class TimeBarView extends View {
             leftGradient.draw(canvas);
 
             initialHour++;
+            if(initialHour == 25) {
+                initialHour = 1;
+                isDayChange = true;
+                dayChangePos = (int) x;
+            }
+
             x += increment;
         }
 
