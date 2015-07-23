@@ -66,8 +66,8 @@ public class MainActivity extends Activity {
         timeBarView = (TimeBarView) findViewById(R.id.timeBarView);
         Calendar calendar = new GregorianCalendar(2015, 6, 15, 20, 0);
         timeBarView.setInitialDate(calendar.getTime());
-        calendar.add(Calendar.HOUR_OF_DAY, 4);
-        timeBarView.setFinalDate(calendar.getTime());
+//        calendar.add(Calendar.HOUR_OF_DAY, 4);
+//        timeBarView.setFinalDate(calendar.getTime());
         timeBarView.invalidate();
 
         iconsLayout = (LinearLayout) findViewById(R.id.iconsLayout);
@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
 
         Map<Channel, ProgramComponentList> map = channels.getProgramComponents();
 
-        timeBarView.setTotalWidth((int) ((channels.getMaxWidthDp() + 72) * dm.density));
+//        timeBarView.setTotalWidth((int) ((channels.getMaxWidthDp() + 72) * dm.density));
 
         for(Map.Entry<Channel, ProgramComponentList> entry : map.entrySet()) {
             Channel channel = entry.getKey();

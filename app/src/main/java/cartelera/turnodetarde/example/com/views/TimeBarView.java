@@ -15,9 +15,13 @@ import android.view.ViewParent;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Stack;
 
 import cartelera.turnodetarde.example.com.R;
 
@@ -30,6 +34,7 @@ public class TimeBarView extends View {
 
     private Date initialDate;
     private Date finalDate;
+    private Date dayShownDate;
     private int totalWidth;
 
 
@@ -39,6 +44,7 @@ public class TimeBarView extends View {
 
     public void setInitialDate(Date initialDate) {
         this.initialDate = initialDate;
+        this.dayShownDate = initialDate;
     }
 
     public Date getFinalDate() {
@@ -68,7 +74,10 @@ public class TimeBarView extends View {
     private Paint pntLines = new Paint();
     private Paint pntText = new Paint();
 
-    private Drawable leftGradient;
+
+    private SimpleDateFormat daySdf = new SimpleDateFormat("EEEE d");
+    private long oneDay = 24 * 60 * 60 * 1000;
+    private List<PositionedDate> positionedDatesList = new ArrayList<>();
 
     public TimeBarView(Context context) {
         super(context);
@@ -99,9 +108,8 @@ public class TimeBarView extends View {
         pntText.setColor(Color.BLACK);
         pntText.setTextSize(14 * dm.density);
         pntText.setAntiAlias(true);
+        pntText.setTextAlign(Paint.Align.CENTER);
 
-        leftGradient = getResources().getDrawable(R.drawable.time_gradient);
-        leftGradient.setBounds(0, 0, (int) (72 * dm.density), (int) (48 * dm.density));
     }
 
 
@@ -116,15 +124,38 @@ public class TimeBarView extends View {
         Calendar cal = Calendar.getInstance();
         if(initialDate == null) {
             initialDate = new Date();
+            dayShownDate = initialDate;
         }
         cal.setTime(initialDate);
         int initialHour = cal.get(Calendar.HOUR_OF_DAY);
         float increment = 100 * dm.density;
 
         boolean isDayChange = false;
-        int dayChangePos = 0;
+        int x1 = 0;
 
         while(x < getWidth() + sx + 100) {
+
+            if(initialHour == 24) {
+                initialHour = 0;
+                if(x < getWidth() + sx) {
+                    isDayChange = true;
+
+                    int position = -1;
+                    for(int i = 0; i < positionedDatesList.size(); i++) {
+                        if(positionedDatesList.get(i).getDate().equals(dayShownDate)) {
+                            position = i;
+                            break;
+                        }
+                    }
+                    if(position != -1) {
+                        x1 = positionedDatesList.get(position).getPosition();
+                    } else {
+                        x1 = (int) ((x - sx - leftPadding) / 2 + sx + leftPadding);
+                        positionedDatesList.add(new PositionedDate(dayShownDate, x1));
+                    }
+                }
+            }
+
             canvas.drawLine(x, (float) getHeight(), x, getHeight() - 5 * dm.density, pntLines);
 
             String initialHourString = String.valueOf(initialHour) + ":00";
@@ -137,26 +168,77 @@ public class TimeBarView extends View {
 
             } else if(sx + getWidth() > x - bounds.width() / 2 && sx + getWidth() < x + bounds.width() / 2) {
                 pntText.setAlpha((int) (255 / bounds.width() * (sx + getWidth() - x + bounds.width() / 2)));
-                textPos = sx +  getWidth() - bounds.width();
+                textPos = sx +  getWidth() - bounds.width() / 2;
 
             } else {
                 pntText.setAlpha(255);
-                textPos = (int) (x - bounds.width() / 2);
+                textPos = (int) x;
             }
-            canvas.drawText(initialHourString, textPos, getHeight() - 15 * dm.density, pntText);
-
-            leftGradient.draw(canvas);
+            canvas.drawText(initialHourString, textPos, getHeight() - 10 * dm.density, pntText);
 
             initialHour++;
-            if(initialHour == 25) {
-                initialHour = 1;
-                isDayChange = true;
-                dayChangePos = (int) x;
-            }
-
             x += increment;
         }
 
+        String day = daySdf.format(dayShownDate).toUpperCase();
+        String day2 = daySdf.format(dayShownDate).toUpperCase();
+        pntText.setAlpha(255);
+        if(!isDayChange) {
+            canvas.drawText(day, (getWidth() - leftPadding) / 2 + leftPadding + sx, getHeight() - 25 * dm.density, pntText);
+        } else {
+            canvas.drawText(day, x1, getHeight() - 25 * dm.density, pntText);
+
+        }
+
         canvas.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1, pntLines);
+    }
+
+
+
+
+    private class PositionedDate {
+
+        private Date date;
+        private int position;
+
+        public PositionedDate(Date date, int position) {
+            this.date = date;
+            this.position = position;
+        }
+
+        public Date getDate() {
+            return date;
+        }
+
+        public void setDate(Date date) {
+            this.date = date;
+        }
+
+        public int getPosition() {
+            return position;
+        }
+
+        public void setPosition(int position) {
+            this.position = position;
+        }
+
+
+        @Override
+        public boolean equals(Object o) {
+            if(o == null) {
+                return false;
+            }
+
+            if(!(o instanceof PositionedDate)) {
+                return false;
+            }
+
+            PositionedDate pd = (PositionedDate) o;
+            if(date.equals(pd.date)) {
+                return true;
+            }
+
+            return false;
+        }
     }
 }
