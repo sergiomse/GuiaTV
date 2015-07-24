@@ -2,6 +2,7 @@ package cartelera.turnodetarde.example.com.activities
         ;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,8 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
@@ -27,6 +36,7 @@ import cartelera.turnodetarde.example.com.R;
 import cartelera.turnodetarde.example.com.adapters.ProgramsAdapter;
 import cartelera.turnodetarde.example.com.model.Channel;
 import cartelera.turnodetarde.example.com.model.ChannelList;
+import cartelera.turnodetarde.example.com.model.Program;
 import cartelera.turnodetarde.example.com.model.ProgramComponentList;
 import cartelera.turnodetarde.example.com.views.ProgramsRecyclerView;
 import cartelera.turnodetarde.example.com.views.TimeBarView;
@@ -35,6 +45,8 @@ import cartelera.turnodetarde.example.com.views.TimeBarView;
 public class MainActivity extends Activity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    private ProgressDialog progressDialog;
 
     private LinearLayout iconsLayout;
     private HorizontalScrollView scrollProgramsView;
@@ -52,38 +64,70 @@ public class MainActivity extends Activity {
         return channels;
     }
 
-//    public void setChannels(ChannelList channels) {
-//        this.channels = channels;
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         dm = getResources().getDisplayMetrics();
 
         timeBarView = (TimeBarView) findViewById(R.id.timeBarView);
         Calendar calendar = new GregorianCalendar(2015, 6, 15, 20, 0);
         timeBarView.setInitialDate(calendar.getTime());
-//        calendar.add(Calendar.HOUR_OF_DAY, 4);
-//        timeBarView.setFinalDate(calendar.getTime());
         timeBarView.invalidate();
 
         iconsLayout = (LinearLayout) findViewById(R.id.iconsLayout);
         programsLayout = (LinearLayout) findViewById(R.id.programsLayout);
 
 
-
+//        receiveData();
         readData();
         drawData();
     }
 
+
+
+    private void receiveData() {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="http://jbossas-semise.rhcloud.com/Guia";
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Gson gson = new Gson();
+                        channels = gson.fromJson(response, new TypeToken<ChannelList>(){}.getType());
+                        Collections.sort(channels);
+
+                        if (progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                    }
+                },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                        Toast.makeText(MainActivity.this, "Error ", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        progressDialog = ProgressDialog.show(MainActivity.this, "Loading", "Loading...");
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+
+
     private void drawData() {
 
         Map<Channel, ProgramComponentList> map = channels.getProgramComponents();
-
-//        timeBarView.setTotalWidth((int) ((channels.getMaxWidthDp() + 72) * dm.density));
 
         for(Map.Entry<Channel, ProgramComponentList> entry : map.entrySet()) {
             Channel channel = entry.getKey();
@@ -107,6 +151,8 @@ public class MainActivity extends Activity {
         }
 
     }
+
+
 
     private void readData() {
         String line = null;
@@ -136,10 +182,18 @@ public class MainActivity extends Activity {
             }
         }
 
-        Gson gson = new Gson();
+//        Gson gson = new Gson();
+        GsonBuilder builder = new GsonBuilder();
         channels = gson.fromJson(json.toString(), new TypeToken<ChannelList>(){}.getType());
+
+        for(Channel channel : channels) {
+            for(Program program : channel.getPrograms()) {
+                program.setChannelName(channel.getName());
+            }
+        }
         Collections.sort(channels);
     }
+
 
 
     private class OnChannelScrollListener extends OnScrollListener {

@@ -2,4 +2,5 @@
 <resources>
     <color name="white">#FFFFFF</color>
     <color name="empty_program_color">#DCDCDC</color>
+    <color name="guia_blue">#ff249cff</color>
 </resources>

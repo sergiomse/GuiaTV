@@ -9,7 +9,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
 
 import cartelera.turnodetarde.example.com.R;
 import cartelera.turnodetarde.example.com.model.Program;
@@ -23,12 +26,27 @@ public class DetailActivity extends Activity {
     private ProgressDialog progressDialog;
     private Program program;
 
+    private TextView tvTime;
+    private TextView tvChannel;
+    private TextView tvProgram;
+
+    private SimpleDateFormat sdf = new SimpleDateFormat("HH.mm");
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
         program = getIntent().getParcelableExtra("program");
+
+        tvTime = (TextView) findViewById(R.id.tvTime);
+        tvChannel = (TextView) findViewById(R.id.tvChannel);
+        tvProgram = (TextView) findViewById(R.id.tvProgram);
+
+        tvTime.setText(sdf.format(program.getStart()));
+        tvChannel.setText(program.getChannelName());
+        tvProgram.setText(program.getName());
 
         webView = (WebView) findViewById(R.id.webView);
 
