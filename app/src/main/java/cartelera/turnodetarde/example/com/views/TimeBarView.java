@@ -78,6 +78,8 @@ public class TimeBarView extends View {
     private SimpleDateFormat daySdf = new SimpleDateFormat("EEEE d");
     private long oneDay = 24 * 60 * 60 * 1000;
     private List<PositionedDate> positionedDatesList = new ArrayList<>();
+    private Date nextShownDate;
+    private String nextShownDateStr;
 
     public TimeBarView(Context context) {
         super(context);
@@ -113,6 +115,7 @@ public class TimeBarView extends View {
     }
 
 
+    //FIXME Refactorizar para organizarlo mejor y solucionar algunos problemas
     @Override
     protected void onDraw(Canvas canvas) {
         int sx = getScrollX();
@@ -132,6 +135,8 @@ public class TimeBarView extends View {
 
         boolean isDayChange = false;
         int x1 = 0;
+        int x2 = 0;
+        int alpha = 255;
 
         while(x < getWidth() + sx + 100) {
 
@@ -152,6 +157,26 @@ public class TimeBarView extends View {
                     } else {
                         x1 = (int) ((x - sx - leftPadding) / 2 + sx + leftPadding);
                         positionedDatesList.add(new PositionedDate(dayShownDate, x1));
+                    }
+
+                    if(nextShownDate == null) {
+                        nextShownDate = new Date(dayShownDate.getTime() + oneDay);
+                    }
+
+                    nextShownDateStr = nextShownDate != null ? daySdf.format(nextShownDate).toUpperCase() : "";
+
+                    Rect bounds = new Rect();
+                    pntText.getTextBounds(nextShownDateStr, 0, nextShownDateStr.length(), bounds);
+
+                    if( (sx + getWidth() + x + bounds.width()) / 2 > sx + getWidth()) {
+                        x2 = sx + getWidth() - bounds.width() / 2;
+                        alpha = (int) (255 / bounds.width() * (sx + getWidth() - x + bounds.width() / 2));
+                    } else {
+                        x2 = (int) ((sx + getWidth() + x) / 2.0);
+                    }
+
+                    if(x2 < (getWidth() - leftPadding) / 2 + sx + leftPadding) {
+                        x2 = (getWidth() - leftPadding) / 2 + leftPadding + sx;
                     }
                 }
             }
@@ -180,14 +205,16 @@ public class TimeBarView extends View {
             x += increment;
         }
 
+
         String day = daySdf.format(dayShownDate).toUpperCase();
-        String day2 = daySdf.format(dayShownDate).toUpperCase();
         pntText.setAlpha(255);
         if(!isDayChange) {
             canvas.drawText(day, (getWidth() - leftPadding) / 2 + leftPadding + sx, getHeight() - 25 * dm.density, pntText);
         } else {
-            canvas.drawText(day, x1, getHeight() - 25 * dm.density, pntText);
 
+            canvas.drawText(day, x1, getHeight() - 25 * dm.density, pntText);
+            pntText.setAlpha(alpha);
+            canvas.drawText(nextShownDateStr, x2, getHeight() - 25 * dm.density, pntText);
         }
 
         canvas.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1, pntLines);
