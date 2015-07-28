@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 
+import cartelera.turnodetarde.example.com.CustomLinearLayoutManager;
 import cartelera.turnodetarde.example.com.R;
 import cartelera.turnodetarde.example.com.adapters.LinksAdapter;
 import cartelera.turnodetarde.example.com.model.Link;
@@ -58,7 +59,7 @@ public class DetailActivity extends Activity {
 
         linksRecyclerView = (RecyclerView) findViewById(R.id.linksRecyclerView);
 
-        LinearLayoutManager lManager = new LinearLayoutManager(this);
+        CustomLinearLayoutManager lManager = new CustomLinearLayoutManager(this);
         lManager.setOrientation(LinearLayoutManager.VERTICAL);
         linksRecyclerView.setLayoutManager(lManager);
 
@@ -67,8 +68,9 @@ public class DetailActivity extends Activity {
             links = new Link[0];
         }
 
-        LinksAdapter linksAdapter = new LinksAdapter(this, links);
+        LinksAdapter linksAdapter = new LinksAdapter(this,linksRecyclerView, links);
         linksRecyclerView.setAdapter(linksAdapter);
+
     }
 
 

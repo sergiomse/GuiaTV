@@ -1,7 +1,10 @@
 package cartelera.turnodetarde.example.com.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,14 +32,27 @@ public class LinksAdapter extends RecyclerView.Adapter {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.textView);
         }
+
     }
 
 
     private Link[] links;
-    private DisplayMetrics dm;
-    private OnProgramClickListener onProgramClickListener;
+    private RecyclerView recyclerView;
+    private Context context;
 
-    public LinksAdapter(Context context, Link[] links) {
+    private final View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            int position = recyclerView.getChildPosition(v);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(links[position].getUrl()));
+            context.startActivity(intent);
+        }
+    };
+
+    public LinksAdapter(Context context, RecyclerView recyclerView, Link[] links) {
+        this.context = context;
+        this.recyclerView = recyclerView;
         this.links = links;
     }
 
@@ -52,6 +68,8 @@ public class LinksAdapter extends RecyclerView.Adapter {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.item_link, viewGroup, false);
 
+        v.setOnClickListener(onClickListener);
+
         return new LinksHolder(v);
     }
 
@@ -59,7 +77,7 @@ public class LinksAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         LinksHolder holder = (LinksHolder) viewHolder;
-        holder.textView.setText(links[position].getText());
+        holder.textView.setText(Html.fromHtml("<u>" + links[position].getText() + "</u>"));
     }
 
     @Override

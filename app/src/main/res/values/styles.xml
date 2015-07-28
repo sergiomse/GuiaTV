@@ -5,4 +5,10 @@
 
     </style>
 
+    <style name="AppTheme.Link">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:lines">1</item>
+        <item name="android:background">@drawable/shape_link</item>
+    </style>
 </resources>
