@@ -14,7 +14,8 @@ public class Program implements Parcelable{
     private Date start;
     private Date finish;
     private String name;
-    private String detailsUrl;
+    private String details;
+    private Link[] links;
     private transient String channelName;
 
     public Program(Parcel source) {
@@ -22,7 +23,8 @@ public class Program implements Parcelable{
         start = new Date(source.readLong());
         finish = new Date(source.readLong());
         name = source.readString();
-        detailsUrl = source.readString();
+        details = source.readString();
+        links = source.createTypedArray(Link.CREATOR);
         channelName = source.readString();
     }
 
@@ -59,12 +61,20 @@ public class Program implements Parcelable{
         this.name = name;
     }
 
-    public String getDetailsUrl() {
-        return detailsUrl;
+    public String getDetails() {
+        return details;
     }
 
-    public void setDetailsUrl(String detailsUrl) {
-        this.detailsUrl = detailsUrl;
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public Link[] getLinks() {
+        return links;
+    }
+
+    public void setLinks(Link[] links) {
+        this.links = links;
     }
 
     public String getChannelName() {
@@ -86,7 +96,8 @@ public class Program implements Parcelable{
         dest.writeLong(start.getTime());
         dest.writeLong(finish.getTime());
         dest.writeString(name);
-        dest.writeString(detailsUrl);
+        dest.writeString(details);
+        dest.writeTypedArray(links, flags);
         dest.writeString(channelName);
     }
 

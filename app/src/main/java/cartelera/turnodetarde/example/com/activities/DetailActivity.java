@@ -3,7 +3,10 @@ package cartelera.turnodetarde.example.com.activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -13,6 +16,8 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 
 import cartelera.turnodetarde.example.com.R;
+import cartelera.turnodetarde.example.com.adapters.LinksAdapter;
+import cartelera.turnodetarde.example.com.model.Link;
 import cartelera.turnodetarde.example.com.model.Program;
 
 
@@ -27,6 +32,9 @@ public class DetailActivity extends Activity {
     private TextView tvTime;
     private TextView tvChannel;
     private TextView tvProgram;
+    private TextView tvContent;
+
+    private RecyclerView linksRecyclerView;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("HH.mm");
 
@@ -41,47 +49,31 @@ public class DetailActivity extends Activity {
         tvTime = (TextView) findViewById(R.id.tvTime);
         tvChannel = (TextView) findViewById(R.id.tvChannel);
         tvProgram = (TextView) findViewById(R.id.tvProgram);
+        tvContent = (TextView) findViewById(R.id.tvContent);
 
         tvTime.setText(sdf.format(program.getStart()));
         tvChannel.setText(program.getChannelName());
         tvProgram.setText(program.getName());
+        tvContent.setText(program.getDetails());
 
-        webView = (WebView) findViewById(R.id.webView);
+        linksRecyclerView = (RecyclerView) findViewById(R.id.linksRecyclerView);
 
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        LinearLayoutManager lManager = new LinearLayoutManager(this);
+        lManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linksRecyclerView.setLayoutManager(lManager);
 
-        progressDialog = ProgressDialog.show(DetailActivity.this, "Loading Details", "Loading...");
+        Link[] links = program.getLinks();
+        if(links == null) {
+            links = new Link[0];
+        }
 
-        webView.setWebViewClient(new WebViewClient() {
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.i(TAG, "Processing webview url click...");
-                view.loadUrl(url);
-                return true;
-            }
+        LinksAdapter linksAdapter = new LinksAdapter(this, links);
+        linksRecyclerView.setAdapter(linksAdapter);
+    }
 
-            public void onPageFinished(WebView view, String url) {
-                Log.i(TAG, "Finished loading URL: " + url);
-                if (progressDialog.isShowing()) {
-                    progressDialog.dismiss();
-                }
-            }
 
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                Log.e(TAG, "Error: " + description);
-                Toast.makeText(DetailActivity.this, "Oh no! " + description, Toast.LENGTH_SHORT).show();
-//                alertDialog.setTitle("Error");
-//                alertDialog.setMessage(description);
-//                alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        return;
-//                    }
-//                });
-//                alertDialog.show();
-            }
-        });
-        webView.loadUrl(program.getDetailsUrl());
+    public void onClickAlarm(View v) {
+
     }
 
 }

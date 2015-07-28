@@ -70,7 +70,7 @@ public class ChannelList extends ArrayList<Channel> {
                 programComponent.setId(program.getId());
                 programComponent.setDpWidth(finish - offset);
                 programComponent.setName(program.getName());
-                programComponent.setTime(sdf.format(startDate));
+                programComponent.setTime(sdf.format(program.getStart()));
 
                 totalWidth += finish - offset;
                 programComponentList.add(programComponent);

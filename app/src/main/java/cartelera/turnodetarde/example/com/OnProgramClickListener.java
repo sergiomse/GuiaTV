@@ -1,7 +1,9 @@
 package cartelera.turnodetarde.example.com;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
-import android.util.Log;
+import android.os.Build;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -25,7 +27,13 @@ public class OnProgramClickListener implements View.OnClickListener {
 
             Intent intent = new Intent(activity, DetailActivity.class);
             intent.putExtra("program", program);
-            activity.startActivity(intent);
+
+            if(Build.VERSION.SDK_INT >= 21) {
+                activity.startActivity(intent,
+                        ActivityOptions.makeSceneTransitionAnimation((Activity) v.getContext()).toBundle());
+            } else {
+                activity.startActivity(intent);
+            }
         }
     }
 

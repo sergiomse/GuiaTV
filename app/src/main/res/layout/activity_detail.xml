@@ -31,7 +31,8 @@
                 android:id="@+id/ivAlarm"
                 android:layout_alignParentEnd="false"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp" />
+                android:layout_marginRight="16dp"
+                android:onClick="onClickAlarm" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -52,7 +53,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Large Text"
+                        android:text="tvTime"
                         android:id="@+id/tvTime"
                         android:textSize="16dp"
                         android:singleLine="true"
@@ -63,7 +64,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Large Text"
+                        android:text="tvChannel"
                         android:id="@+id/tvChannel"
                         android:textSize="16dp"
                         android:singleLine="true"
@@ -73,7 +74,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Large Text"
+                    android:text="tvProgram"
                     android:id="@+id/tvProgram"
                     android:ellipsize="end"
                     android:singleLine="true"
@@ -86,13 +87,29 @@
 
     </android.support.v7.widget.Toolbar>
 
-
-
-    <WebView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/webView"
-        android:visibility="visible" />
+        android:id="@+id/scrollView" >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/tvContent" />
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/linksRecyclerView"></android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+    </ScrollView>
 
 
 </LinearLayout>

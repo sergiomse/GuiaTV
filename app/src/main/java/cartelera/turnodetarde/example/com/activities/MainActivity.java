@@ -3,13 +3,16 @@ package cartelera.turnodetarde.example.com.activities
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.transition.ChangeClipBounds;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -21,7 +24,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
@@ -68,7 +70,15 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(Build.VERSION.SDK_INT >= 21) {
+            getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+
+            // set an exit transition
+            getWindow().setExitTransition(new ChangeClipBounds());
+        }
         setContentView(R.layout.activity_main);
+
 
 
         dm = getResources().getDisplayMetrics();
@@ -82,9 +92,9 @@ public class MainActivity extends Activity {
         programsLayout = (LinearLayout) findViewById(R.id.programsLayout);
 
 
-//        receiveData();
-        readData();
-        drawData();
+        receiveData();
+//        readData();
+
     }
 
 
@@ -101,6 +111,8 @@ public class MainActivity extends Activity {
                         Gson gson = new Gson();
                         channels = gson.fromJson(response, new TypeToken<ChannelList>(){}.getType());
                         Collections.sort(channels);
+
+                        drawData();
 
                         if (progressDialog.isShowing()) {
                             progressDialog.dismiss();
@@ -182,8 +194,7 @@ public class MainActivity extends Activity {
             }
         }
 
-//        Gson gson = new Gson();
-        GsonBuilder builder = new GsonBuilder();
+        Gson gson = new Gson();
         channels = gson.fromJson(json.toString(), new TypeToken<ChannelList>(){}.getType());
 
         for(Channel channel : channels) {
@@ -219,7 +230,6 @@ public class MainActivity extends Activity {
                 }
             }
         }
-
     }
 
     private OnChannelScrollListener onChannelScrollListener = new OnChannelScrollListener();
