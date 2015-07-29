@@ -13,15 +13,21 @@ public class Program implements Parcelable{
     private int id;
     private Date start;
     private Date finish;
+    private Date alarm;
     private String name;
     private String details;
     private Link[] links;
     private transient String channelName;
 
+
+    public Program() {}
+
     public Program(Parcel source) {
         id = source.readInt();
         start = new Date(source.readLong());
         finish = new Date(source.readLong());
+        alarm = new Date(source.readLong());
+
         name = source.readString();
         details = source.readString();
         links = source.createTypedArray(Link.CREATOR);
@@ -51,6 +57,14 @@ public class Program implements Parcelable{
 
     public void setFinish(Date finish) {
         this.finish = finish;
+    }
+
+    public Date getAlarm() {
+        return alarm;
+    }
+
+    public void setAlarm(Date alarm) {
+        this.alarm = alarm;
     }
 
     public String getName() {
@@ -95,6 +109,7 @@ public class Program implements Parcelable{
         dest.writeInt(id);
         dest.writeLong(start.getTime());
         dest.writeLong(finish.getTime());
+        dest.writeLong(alarm.getTime());
         dest.writeString(name);
         dest.writeString(details);
         dest.writeTypedArray(links, flags);
