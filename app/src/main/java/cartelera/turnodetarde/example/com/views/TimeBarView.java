@@ -5,25 +5,17 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewParent;
-import android.widget.HorizontalScrollView;
-import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Stack;
 
-import cartelera.turnodetarde.example.com.R;
+import cartelera.turnodetarde.example.com.Constansts;
 
 /**
  * Created by turno de tarde on 15/07/2015.
@@ -106,8 +98,9 @@ public class TimeBarView extends View {
         leftPadding = (int) (72 * dm.density - 1);
 
         pntBackground.setColor(Color.rgb(236, 236, 236));
-        pntLines.setColor(Color.rgb(222, 222, 222));
+//        pntLines.setColor(Color.rgb(222, 222, 222));
         pntText.setColor(Color.BLACK);
+        pntLines.setColor(Color.BLACK);
         pntText.setTextSize(14 * dm.density);
         pntText.setAntiAlias(true);
         pntText.setTextAlign(Paint.Align.CENTER);
@@ -115,7 +108,7 @@ public class TimeBarView extends View {
     }
 
 
-    //FIXME Refactorizar para organizarlo mejor y solucionar algunos problemas
+    //FIXME Modificar para organizarlo mejor y solucionar algunos problemas
     @Override
     protected void onDraw(Canvas canvas) {
         int sx = getScrollX();
@@ -131,7 +124,7 @@ public class TimeBarView extends View {
         }
         cal.setTime(initialDate);
         int initialHour = cal.get(Calendar.HOUR_OF_DAY);
-        float increment = 100 * dm.density;
+        float increment = Constansts.DP_WIDTH_PER_HOUR * dm.density;
 
         boolean isDayChange = false;
         int x1 = 0;

@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 /**
  * Created by turno de tarde on 17/07/2015.
  */
+//TODO esta clase igual se puede quitar porque lo unico que hace es poner la altura
 public class ProgramsRecyclerView extends RecyclerView {
 
     private DisplayMetrics dm;

@@ -4,4 +4,5 @@
     <color name="empty_program_color">#DCDCDC</color>
     <color name="guia_blue">#ff249cff</color>
     <color name="guia_link_blue">#ff15fffd</color>
+    <color name="guia_orange">#FFC107</color>
 </resources>

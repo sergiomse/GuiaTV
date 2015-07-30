@@ -8,7 +8,7 @@
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="#FFC107"
+        android:background="@color/guia_orange"
         android:elevation="5dp">
 
         <RelativeLayout

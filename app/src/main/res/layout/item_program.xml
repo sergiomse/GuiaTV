@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="21.00"
+        android:text=""
         android:textSize="16dp"
         android:textColor="#529DA6"
         android:singleLine="true"
@@ -18,7 +18,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="hola"
+        android:text=""
+        android:minLines="1"
+        android:maxLines="2"
+        android:ellipsize="end"
         android:textSize="14dp"
         android:id="@+id/tvProgramName"/>
 </LinearLayout>

@@ -9,15 +9,33 @@
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="#FFC107"
+        android:background="@color/guia_orange"
         android:elevation="5dp">
 
-        <ImageView
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:src="@drawable/ic_television"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_television"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Guia TV"
+                android:id="@+id/textView2"
+                android:layout_marginLeft="20dp"
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
 
     </android.support.v7.widget.Toolbar>
+
+
 
 
     <FrameLayout
@@ -65,14 +83,26 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:id="@+id/programsLayout"
-                ></LinearLayout>
+                android:layout_height="match_parent">
 
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:id="@+id/programsLayout"
+                    ></LinearLayout>
+
+
+                <ImageView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/red_background"
+                    android:id="@+id/timeLine" />
+
+            </FrameLayout>
         </LinearLayout>
     </ScrollView>
 

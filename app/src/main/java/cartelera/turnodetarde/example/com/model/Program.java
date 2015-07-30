@@ -26,8 +26,10 @@ public class Program implements Parcelable{
         id = source.readInt();
         start = new Date(source.readLong());
         finish = new Date(source.readLong());
-        alarm = new Date(source.readLong());
-
+        byte isNull = source.readByte();
+        if(isNull == 1) {
+            alarm = new Date(source.readLong());
+        }
         name = source.readString();
         details = source.readString();
         links = source.createTypedArray(Link.CREATOR);
@@ -109,7 +111,12 @@ public class Program implements Parcelable{
         dest.writeInt(id);
         dest.writeLong(start.getTime());
         dest.writeLong(finish.getTime());
-        dest.writeLong(alarm.getTime());
+        if(alarm != null) {
+            dest.writeByte((byte)1);
+            dest.writeLong(alarm.getTime());
+        } else {
+            dest.writeByte((byte)0);
+        }
         dest.writeString(name);
         dest.writeString(details);
         dest.writeTypedArray(links, flags);

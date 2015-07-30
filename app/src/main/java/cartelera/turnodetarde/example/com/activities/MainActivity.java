@@ -1,5 +1,4 @@
-package cartelera.turnodetarde.example.com.activities
-        ;
+package cartelera.turnodetarde.example.com.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -13,7 +12,9 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -31,9 +32,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.GregorianCalendar;
+import java.util.Date;
 import java.util.Map;
 
+import cartelera.turnodetarde.example.com.Constansts;
 import cartelera.turnodetarde.example.com.R;
 import cartelera.turnodetarde.example.com.adapters.ProgramsAdapter;
 import cartelera.turnodetarde.example.com.model.Channel;
@@ -56,8 +58,9 @@ public class MainActivity extends Activity {
     private TimeBarView timeBarView;
     private RecyclerView recyclerView;
     private LinearLayoutManager lManager;
+    private ImageView timeLine;
 
-    private int overallXScroll = 0;
+    private int totalXScroll = 0;
     private DisplayMetrics dm;
 
     private ChannelList channels = new ChannelList();
@@ -84,13 +87,16 @@ public class MainActivity extends Activity {
         dm = getResources().getDisplayMetrics();
 
         timeBarView = (TimeBarView) findViewById(R.id.timeBarView);
-        Calendar calendar = new GregorianCalendar(2015, 6, 15, 20, 0);
-        timeBarView.setInitialDate(calendar.getTime());
-        timeBarView.invalidate();
+        timeBarView.setInitialDate(new Date());
 
         iconsLayout = (LinearLayout) findViewById(R.id.iconsLayout);
         programsLayout = (LinearLayout) findViewById(R.id.programsLayout);
 
+        Calendar cal = Calendar.getInstance();
+        int leftLine = (int) (cal.get(Calendar.MINUTE) / 60.0 * Constansts.DP_WIDTH_PER_HOUR * dm.density);
+        timeLine = (ImageView) findViewById(R.id.timeLine);
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) timeLine.getLayoutParams();
+        params.leftMargin = leftLine;
 
         receiveData();
 //        readData();
@@ -213,9 +219,9 @@ public class MainActivity extends Activity {
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
 
-            overallXScroll = overallXScroll + dx;
+            totalXScroll = totalXScroll + dx;
 
-            timeBarView.scrollTo(overallXScroll, 0);
+            timeBarView.scrollTo(totalXScroll, 0);
 
             int childCount = programsLayout.getChildCount();
             for(int i=0; i<childCount; i++) {
@@ -229,6 +235,10 @@ public class MainActivity extends Activity {
                     }
                 }
             }
+
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) timeLine.getLayoutParams();
+            params.leftMargin = params.leftMargin - dx;
+            timeLine.setLayoutParams(params);
         }
     }
 
