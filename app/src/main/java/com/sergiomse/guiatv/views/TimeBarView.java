@@ -1,4 +1,4 @@
-package cartelera.turnodetarde.example.com.views;
+package com.sergiomse.guiatv.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import cartelera.turnodetarde.example.com.Constansts;
 
 /**

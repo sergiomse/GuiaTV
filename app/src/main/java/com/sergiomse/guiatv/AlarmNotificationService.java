@@ -1,4 +1,4 @@
-package cartelera.turnodetarde.example.com;
+package com.sergiomse.guiatv;
 
 import android.app.NotificationManager;
 import android.app.Service;
@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
-import cartelera.turnodetarde.example.com.database.ProgramAlarm;
+import com.sergiomse.guiatv.database.ProgramAlarm;
 
 
 public class AlarmNotificationService extends Service {

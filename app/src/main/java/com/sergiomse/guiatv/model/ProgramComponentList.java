@@ -1,4 +1,6 @@
-package cartelera.turnodetarde.example.com.model;
+package com.sergiomse.guiatv.model;
+
+import com.sergiomse.guiatv.model.ProgramComponentBase;
 
 import java.util.ArrayList;
 

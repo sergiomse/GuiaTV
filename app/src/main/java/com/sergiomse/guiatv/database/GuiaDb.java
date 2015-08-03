@@ -1,4 +1,4 @@
-package cartelera.turnodetarde.example.com.database;
+package com.sergiomse.guiatv.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.Date;
-
-import cartelera.turnodetarde.example.com.model.Program;
 
 /**
  * Created by sergiomse@gmail.com on 26/07/2015.

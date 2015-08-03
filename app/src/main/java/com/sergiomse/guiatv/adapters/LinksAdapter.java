@@ -1,23 +1,17 @@
-package cartelera.turnodetarde.example.com.adapters;
+package com.sergiomse.guiatv.adapters;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import cartelera.turnodetarde.example.com.OnProgramClickListener;
-import cartelera.turnodetarde.example.com.R;
-import cartelera.turnodetarde.example.com.model.EmptyProgramComponent;
-import cartelera.turnodetarde.example.com.model.Link;
-import cartelera.turnodetarde.example.com.model.ProgramComponent;
-import cartelera.turnodetarde.example.com.model.ProgramComponentBase;
+import com.sergiomse.guiatv.R;
+import com.sergiomse.guiatv.model.Link;
 
 /**
  * Created by turno de tarde on 17/07/2015.

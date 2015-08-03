@@ -1,4 +1,4 @@
-package cartelera.turnodetarde.example.com.database;
+package com.sergiomse.guiatv.database;
 
 import android.os.Parcel;
 import android.os.Parcelable;

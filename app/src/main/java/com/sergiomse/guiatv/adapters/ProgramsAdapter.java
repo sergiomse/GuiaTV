@@ -1,4 +1,4 @@
-package cartelera.turnodetarde.example.com.adapters;
+package com.sergiomse.guiatv.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,16 +9,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Calendar;
-import java.util.Date;
-
-import cartelera.turnodetarde.example.com.OnProgramClickListener;
-import cartelera.turnodetarde.example.com.R;
-import cartelera.turnodetarde.example.com.model.Channel;
-import cartelera.turnodetarde.example.com.model.EmptyProgramComponent;
-import cartelera.turnodetarde.example.com.model.ProgramComponent;
-import cartelera.turnodetarde.example.com.model.ProgramComponentBase;
-import cartelera.turnodetarde.example.com.model.ProgramComponentList;
+import com.sergiomse.guiatv.OnProgramClickListener;
+import com.sergiomse.guiatv.R;
+import com.sergiomse.guiatv.model.EmptyProgramComponent;
+import com.sergiomse.guiatv.model.ProgramComponent;
+import com.sergiomse.guiatv.model.ProgramComponentBase;
+import com.sergiomse.guiatv.model.ProgramComponentList;
 
 /**
  * Created by turno de tarde on 17/07/2015.

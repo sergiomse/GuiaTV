@@ -1,4 +1,4 @@
-package cartelera.turnodetarde.example.com.activities;
+package com.sergiomse.guiatv.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -35,15 +35,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
-import cartelera.turnodetarde.example.com.Constansts;
-import cartelera.turnodetarde.example.com.R;
-import cartelera.turnodetarde.example.com.adapters.ProgramsAdapter;
-import cartelera.turnodetarde.example.com.model.Channel;
-import cartelera.turnodetarde.example.com.model.ChannelList;
-import cartelera.turnodetarde.example.com.model.Program;
-import cartelera.turnodetarde.example.com.model.ProgramComponentList;
-import cartelera.turnodetarde.example.com.views.ProgramsRecyclerView;
-import cartelera.turnodetarde.example.com.views.TimeBarView;
+import com.sergiomse.guiatv.R;
+import com.sergiomse.guiatv.adapters.ProgramsAdapter;
+import com.sergiomse.guiatv.model.Channel;
+import com.sergiomse.guiatv.model.ChannelList;
+import com.sergiomse.guiatv.model.Program;
+import com.sergiomse.guiatv.model.ProgramComponentList;
+import com.sergiomse.guiatv.views.ProgramsRecyclerView;
+import com.sergiomse.guiatv.views.TimeBarView;
 
 
 public class MainActivity extends Activity {

@@ -1,4 +1,4 @@
-package cartelera.turnodetarde.example.com;
+package com.sergiomse.guiatv;
 
 import android.content.Context;
 import android.graphics.Rect;

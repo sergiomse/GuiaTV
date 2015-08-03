@@ -1,4 +1,4 @@
-package cartelera.turnodetarde.example.com.activities;
+package com.sergiomse.guiatv.activities;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -14,17 +14,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sergiomse.guiatv.AlarmNotificationService;
+import com.sergiomse.guiatv.CustomLinearLayoutManager;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import cartelera.turnodetarde.example.com.AlarmNotificationService;
-import cartelera.turnodetarde.example.com.CustomLinearLayoutManager;
-import cartelera.turnodetarde.example.com.R;
-import cartelera.turnodetarde.example.com.adapters.LinksAdapter;
-import cartelera.turnodetarde.example.com.database.GuiaDb;
-import cartelera.turnodetarde.example.com.database.ProgramAlarm;
-import cartelera.turnodetarde.example.com.model.Link;
-import cartelera.turnodetarde.example.com.model.Program;
+
+import com.sergiomse.guiatv.R;
+import com.sergiomse.guiatv.adapters.LinksAdapter;
+import com.sergiomse.guiatv.database.GuiaDb;
+import com.sergiomse.guiatv.database.ProgramAlarm;
+import com.sergiomse.guiatv.model.Link;
+import com.sergiomse.guiatv.model.Program;
 
 
 public class DetailActivity extends Activity {

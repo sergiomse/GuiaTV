@@ -1,4 +1,4 @@
-package cartelera.turnodetarde.example.com.model;
+package com.sergiomse.guiatv.model;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package cartelera.turnodetarde.example.com.model;
+package com.sergiomse.guiatv.model;
 
 /**
  * Created by sergiomse@gmail.com on 21/07/2015.

@@ -1,4 +1,4 @@
-package cartelera.turnodetarde.example.com;
+package com.sergiomse.guiatv;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
@@ -7,10 +7,10 @@ import android.os.Build;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import cartelera.turnodetarde.example.com.activities.DetailActivity;
-import cartelera.turnodetarde.example.com.activities.MainActivity;
-import cartelera.turnodetarde.example.com.model.ChannelList;
-import cartelera.turnodetarde.example.com.model.Program;
+import com.sergiomse.guiatv.activities.DetailActivity;
+import com.sergiomse.guiatv.activities.MainActivity;
+import com.sergiomse.guiatv.model.ChannelList;
+import com.sergiomse.guiatv.model.Program;
 
 /**
  * Created by turno de tarde on 21/07/2015.
