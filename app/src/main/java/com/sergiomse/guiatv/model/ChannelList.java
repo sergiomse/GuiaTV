@@ -1,13 +1,14 @@
 package com.sergiomse.guiatv.model;
 
+import com.sergiomse.guiatv.Constansts;
+
+import org.joda.time.DateTime;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import cartelera.turnodetarde.example.com.Constansts;
 
 /**
  * Created by sergiomse@gmail.com on 21/07/2015.
@@ -15,7 +16,8 @@ import cartelera.turnodetarde.example.com.Constansts;
 public class ChannelList extends ArrayList<Channel> {
 
     private int maxWidthDp;
-    private Date maxDate = new Date();
+    private DateTime now;
+    private DateTime maxDate = new DateTime();
 
     public int getMaxWidthDp() {
         return maxWidthDp;
@@ -25,27 +27,25 @@ public class ChannelList extends ArrayList<Channel> {
         this.maxWidthDp = maxWidthDp;
     }
 
-    public Date getMaxDate() {
+    public DateTime getNow() {
+        return now;
+    }
+
+    public void setNow(DateTime now) {
+        this.now = now;
+    }
+
+    public DateTime getMaxDate() {
         return maxDate;
     }
 
-    public void setMaxDate(Date maxDate) {
+    public void setMaxDate(DateTime maxDate) {
         this.maxDate = maxDate;
     }
 
 
-
-
-
-
-    private final static SimpleDateFormat sdf = new SimpleDateFormat("HH.mm");
-
-//    private final static int DP_WIDTH_PER_HOUR = 100;
-
     public Map<Channel, ProgramComponentList> getProgramComponents() {
-
-        Map<Channel, ProgramComponentList> map = new LinkedHashMap<>();
-
+        Map<Channel, ProgramComponentList> map = new LinkedHashMap<Channel, ProgramComponentList>();
         maxWidthDp = maxWidthDp();
 
         for(Channel channel : this) {
@@ -56,23 +56,21 @@ public class ChannelList extends ArrayList<Channel> {
 
             int indexFirstProgram = getIndexFirstProgram(channel);
 
-            Date startDate = channel.getPrograms().get(indexFirstProgram).getStart();
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(startDate);
-            cal.set(Calendar.MINUTE, 0);
-            offset = (int) (cal.getTime().getTime() / 3600000.0 * Constansts.DP_WIDTH_PER_HOUR);
+            DateTime roundedNow = new DateTime(now.getYear(), now.getMonthOfYear(), now.getDayOfMonth(), now.getHourOfDay(), 0, 0, 0);
+            offset = (int) (roundedNow.getMillis() / 3600000.0 * Constansts.DP_WIDTH_PER_HOUR);
 
 
             for(int i=indexFirstProgram; i<channel.getPrograms().size(); i++) {
                 Program program = channel.getPrograms().get(i);
 
-                int finish = (int) (program.getFinish().getTime() / 3600000.0 * Constansts.DP_WIDTH_PER_HOUR);
+                int finish = (int) (program.getFinish().getMillis() / 3600000.0 * Constansts.DP_WIDTH_PER_HOUR);
 
                 ProgramComponent programComponent = new ProgramComponent();
                 programComponent.setId(program.getId());
                 programComponent.setDpWidth(finish - offset);
                 programComponent.setName(program.getName());
-                programComponent.setTime(sdf.format(program.getStart()));
+                programComponent.setTime(program.getStart().toString("HH.mm"));
+//                programComponent.setTime(sdf.format(program.getStart()));
 
                 totalWidth += finish - offset;
                 programComponentList.add(programComponent);
@@ -87,7 +85,7 @@ public class ChannelList extends ArrayList<Channel> {
 
             map.put(channel, programComponentList);
 
-            Date lastDateChannel = channel.getPrograms().get(channel.getPrograms().size() - 1).getFinish();
+            DateTime lastDateChannel = channel.getPrograms().get(channel.getPrograms().size() - 1).getFinish();
             if(lastDateChannel.compareTo(maxDate) > 0) {
                 maxDate = lastDateChannel;
             }
@@ -97,10 +95,10 @@ public class ChannelList extends ArrayList<Channel> {
     }
 
     private int getIndexFirstProgram(Channel channel) {
-        Date now = new Date();
         for(int i=0; i<channel.getPrograms().size(); i++) {
-            Date finish = channel.getPrograms().get(i).getFinish();
-            if(finish.compareTo(now) > 0) {
+            DateTime finish = channel.getPrograms().get(i).getFinish();
+            DateTime roundedFinish = new DateTime(finish.getYear(), finish.getMonthOfYear(), finish.getDayOfMonth(), finish.getHourOfDay(), 59, 59, 999);
+            if(roundedFinish.compareTo(now) > 0) {
                 return i;
             }
         }
@@ -112,12 +110,12 @@ public class ChannelList extends ArrayList<Channel> {
         int maxWidthDp = 0;
         int width = 0;
         long diff = 0;
-        Date startDate = null;
-        Date finishDate = null;
+        DateTime startDate = null;
+        DateTime finishDate = null;
         for(Channel channel : this) {
             startDate = channel.getPrograms().get(0).getStart();
             finishDate = channel.getPrograms().get(channel.getPrograms().size() - 1).getFinish();
-            diff = finishDate.getTime() - startDate.getTime();
+            diff = finishDate.getMillis() - startDate.getMillis();
             width = (int) (Constansts.DP_WIDTH_PER_HOUR * diff / 3600000.0);
             if(width > maxWidthDp) {
                 maxWidthDp = width;

@@ -11,6 +11,8 @@ public class Link implements Parcelable {
     private String text;
     private String url;
 
+    public Link() {}
+
     public Link(Parcel source) {
         text = source.readString();
         url = source.readString();
@@ -32,7 +34,44 @@ public class Link implements Parcelable {
         this.url = url;
     }
 
+    public static Link[] arrayFromString(String str) {
+        if(str.isEmpty()) {
+            return null;
+        }
 
+        String[] linkStr = str.split("$\\|$");
+        Link[] links = new Link[linkStr.length];
+        for(int i=0; i<linkStr.length; i++) {
+            links[i] = new Link();
+            String fields[] = linkStr[i].split("\\|");
+            links[i].setText(fields[0]);
+            links[i].setUrl(fields[1]);
+        }
+        return links;
+    }
+
+    public static String toArrayString(Link[] links) {
+        if(links == null) {
+            return "";
+        }
+
+        if(links.length == 0) {
+            return "";
+        }
+
+        String result = "";
+        for(int i=0; i<links.length; i++) {
+            if(i != 0) {
+                result += "$|$";
+            }
+
+            result += links[i].getText();
+            result += "|";
+            result += links[i].getUrl();
+
+        }
+        return result;
+    }
 
     @Override
     public int describeContents() {

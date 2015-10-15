@@ -25,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
@@ -35,6 +36,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
+import com.sergiomse.guiatv.Constansts;
+import com.sergiomse.guiatv.ProgramSerializer;
 import com.sergiomse.guiatv.R;
 import com.sergiomse.guiatv.adapters.ProgramsAdapter;
 import com.sergiomse.guiatv.model.Channel;
@@ -43,6 +46,8 @@ import com.sergiomse.guiatv.model.Program;
 import com.sergiomse.guiatv.model.ProgramComponentList;
 import com.sergiomse.guiatv.views.ProgramsRecyclerView;
 import com.sergiomse.guiatv.views.TimeBarView;
+
+import org.joda.time.DateTime;
 
 
 public class MainActivity extends Activity {
@@ -61,6 +66,7 @@ public class MainActivity extends Activity {
 
     private int totalXScroll = 0;
     private DisplayMetrics dm;
+    private DateTime now;
 
     private ChannelList channels = new ChannelList();
 
@@ -75,27 +81,22 @@ public class MainActivity extends Activity {
 
         if(Build.VERSION.SDK_INT >= 21) {
             getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-
             // set an exit transition
             getWindow().setExitTransition(new ChangeClipBounds());
         }
         setContentView(R.layout.activity_main);
 
-
+        now = new DateTime();
 
         dm = getResources().getDisplayMetrics();
 
         timeBarView = (TimeBarView) findViewById(R.id.timeBarView);
-        timeBarView.setInitialDate(new Date());
+        timeBarView.setInitialDate(now);
 
         iconsLayout = (LinearLayout) findViewById(R.id.iconsLayout);
         programsLayout = (LinearLayout) findViewById(R.id.programsLayout);
-
-        Calendar cal = Calendar.getInstance();
-        int leftLine = (int) (cal.get(Calendar.MINUTE) / 60.0 * Constansts.DP_WIDTH_PER_HOUR * dm.density);
         timeLine = (ImageView) findViewById(R.id.timeLine);
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) timeLine.getLayoutParams();
-        params.leftMargin = leftLine;
+
 
         receiveData();
 //        readData();
@@ -113,8 +114,15 @@ public class MainActivity extends Activity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Gson gson = new Gson();
+                        Gson gson = new GsonBuilder().registerTypeAdapter(Program.class, new ProgramSerializer()).create();
                         channels = gson.fromJson(response, new TypeToken<ChannelList>(){}.getType());
+                        for(Channel channel : channels) {
+                            for(Program program : channel.getPrograms()) {
+                                program.setChannelName(channel.getName());
+                            }
+
+                            Collections.sort(channel.getPrograms());
+                        }
                         Collections.sort(channels);
 
                         drawData();
@@ -128,10 +136,12 @@ public class MainActivity extends Activity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        timeLine.setVisibility(View.GONE);
+
                         if (progressDialog.isShowing()) {
                             progressDialog.dismiss();
                         }
-                        Toast.makeText(MainActivity.this, "Error ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Error " + error, Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -144,6 +154,7 @@ public class MainActivity extends Activity {
 
     private void drawData() {
 
+        channels.setNow(now);
         Map<Channel, ProgramComponentList> map = channels.getProgramComponents();
 
         for(Map.Entry<Channel, ProgramComponentList> entry : map.entrySet()) {
@@ -167,48 +178,52 @@ public class MainActivity extends Activity {
             programsLayout.addView(recyclerView);
         }
 
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) timeLine.getLayoutParams();
+        params.leftMargin = (int) (now.getMinuteOfHour() / 60.0 * Constansts.DP_WIDTH_PER_HOUR * dm.density);
+        timeLine.setVisibility(View.VISIBLE);
+
     }
 
 
 
-    private void readData() {
-        String line = null;
-        StringBuilder json = new StringBuilder();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(getResources().openRawResource(R.raw.test)));
-
-        try {
-
-            line = reader.readLine();
-            while (line != null) {
-                json.append(line);
-                json.append("\n");
-                line = reader.readLine();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if(reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    reader = null;
-                }
-            }
-        }
-
-        Gson gson = new Gson();
-        channels = gson.fromJson(json.toString(), new TypeToken<ChannelList>(){}.getType());
-
-        for(Channel channel : channels) {
-            for(Program program : channel.getPrograms()) {
-                program.setChannelName(channel.getName());
-            }
-        }
-        Collections.sort(channels);
-    }
+//    private void readData() {
+//        String line = null;
+//        StringBuilder json = new StringBuilder();
+//        BufferedReader reader = new BufferedReader(new InputStreamReader(getResources().openRawResource(R.raw.test)));
+//
+//        try {
+//
+//            line = reader.readLine();
+//            while (line != null) {
+//                json.append(line);
+//                json.append("\n");
+//                line = reader.readLine();
+//            }
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            if(reader != null) {
+//                try {
+//                    reader.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                } finally {
+//                    reader = null;
+//                }
+//            }
+//        }
+//
+//        Gson gson = new Gson();
+//        channels = gson.fromJson(json.toString(), new TypeToken<ChannelList>(){}.getType());
+//
+//        for(Channel channel : channels) {
+//            for(Program program : channel.getPrograms()) {
+//                program.setChannelName(channel.getName());
+//            }
+//        }
+//        Collections.sort(channels);
+//    }
 
 
 
@@ -223,6 +238,13 @@ public class MainActivity extends Activity {
             timeBarView.scrollTo(totalXScroll, 0);
 
             int childCount = programsLayout.getChildCount();
+//            for(int i=0; i<childCount; i++) {
+//                View v = programsLayout.getChildAt(i);
+//                if (v instanceof ProgramsRecyclerView) {
+//                    ProgramsRecyclerView rv = (ProgramsRecyclerView) v;
+//                    rv.removeOnScrollListener(onChannelScrollListener);
+//                }
+//            }
             for(int i=0; i<childCount; i++) {
                 View v = programsLayout.getChildAt(i);
                 if(v instanceof ProgramsRecyclerView) {
@@ -231,10 +253,17 @@ public class MainActivity extends Activity {
                         rv.setOnScrollListener(null);
                         rv.scrollBy(dx, 0);
                         rv.setOnScrollListener(onChannelScrollListener);
+
                     }
                 }
             }
-
+//            for(int i=0; i<childCount; i++) {
+//                View v = programsLayout.getChildAt(i);
+//                if (v instanceof ProgramsRecyclerView) {
+//                    ProgramsRecyclerView rv = (ProgramsRecyclerView) v;
+//                    rv.addOnScrollListener(onChannelScrollListener);
+//                }
+//            }
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) timeLine.getLayoutParams();
             params.leftMargin = params.leftMargin - dx;
             timeLine.setLayoutParams(params);

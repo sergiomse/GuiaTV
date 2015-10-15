@@ -3,33 +3,30 @@ package com.sergiomse.guiatv.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.joda.time.DateTime;
+
 import java.util.Date;
 
 /**
  * Created by turno de tarde on 07/07/2015.
  */
-public class Program implements Parcelable{
+public class Program implements Parcelable, Comparable<Program> {
 
     private int id;
-    private Date start;
-    private Date finish;
-    private Date alarm;
+    private DateTime start;
+    private DateTime finish;
     private String name;
     private String details;
     private Link[] links;
-    private transient String channelName;
+    private String channelName;
 
 
     public Program() {}
 
     public Program(Parcel source) {
         id = source.readInt();
-        start = new Date(source.readLong());
-        finish = new Date(source.readLong());
-        byte isNull = source.readByte();
-        if(isNull == 1) {
-            alarm = new Date(source.readLong());
-        }
+        start = DateTime.parse(source.readString());
+        finish = DateTime.parse(source.readString());
         name = source.readString();
         details = source.readString();
         links = source.createTypedArray(Link.CREATOR);
@@ -45,28 +42,20 @@ public class Program implements Parcelable{
         this.id = id;
     }
 
-    public Date getStart() {
+    public DateTime getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(DateTime start) {
         this.start = start;
     }
 
-    public Date getFinish() {
+    public DateTime getFinish() {
         return finish;
     }
 
-    public void setFinish(Date finish) {
+    public void setFinish(DateTime finish) {
         this.finish = finish;
-    }
-
-    public Date getAlarm() {
-        return alarm;
-    }
-
-    public void setAlarm(Date alarm) {
-        this.alarm = alarm;
     }
 
     public String getName() {
@@ -109,14 +98,8 @@ public class Program implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
-        dest.writeLong(start.getTime());
-        dest.writeLong(finish.getTime());
-        if(alarm != null) {
-            dest.writeByte((byte)1);
-            dest.writeLong(alarm.getTime());
-        } else {
-            dest.writeByte((byte)0);
-        }
+        dest.writeString(start.toString());
+        dest.writeString(finish.toString());
         dest.writeString(name);
         dest.writeString(details);
         dest.writeTypedArray(links, flags);
@@ -135,4 +118,9 @@ public class Program implements Parcelable{
             return new Program[size];
         }
     };
+
+    @Override
+    public int compareTo(Program another) {
+        return start.compareTo(another.start);
+    }
 }

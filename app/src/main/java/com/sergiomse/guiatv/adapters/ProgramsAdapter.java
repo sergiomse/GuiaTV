@@ -67,7 +67,7 @@ public class ProgramsAdapter extends RecyclerView.Adapter {
                     .inflate(R.layout.item_empty, viewGroup, false);
         }
 
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams((int) (programComponentList.get(viewType).getDpWidth() * dm.density),
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams((int) (programComponentBase.getDpWidth() * dm.density),
                 (int) (72 * dm.density));
         v.setLayoutParams(params);
         return new ChannelHolder(v);

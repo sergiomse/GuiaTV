@@ -9,12 +9,14 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import com.sergiomse.guiatv.Constansts;
+
+import org.joda.time.DateTime;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import cartelera.turnodetarde.example.com.Constansts;
 
 /**
  * Created by turno de tarde on 15/07/2015.
@@ -23,17 +25,17 @@ public class TimeBarView extends View {
 
     private static final String TAG = TimeBarView.class.getSimpleName();
 
-    private Date initialDate;
+    private DateTime initialDate;
     private Date finalDate;
-    private Date dayShownDate;
+    private DateTime dayShownDate;
     private int totalWidth;
 
 
-    public Date getInitialDate() {
+    public DateTime getInitialDate() {
         return initialDate;
     }
 
-    public void setInitialDate(Date initialDate) {
+    public void setInitialDate(DateTime initialDate) {
         this.initialDate = initialDate;
         this.dayShownDate = initialDate;
     }
@@ -68,9 +70,10 @@ public class TimeBarView extends View {
 
     private SimpleDateFormat daySdf = new SimpleDateFormat("EEEE d");
     private long oneDay = 24 * 60 * 60 * 1000;
-    private List<PositionedDate> positionedDatesList = new ArrayList<>();
-    private Date nextShownDate;
+    private List<PositionedDate> positionedDatesList = new ArrayList<PositionedDate>();
+    private DateTime nextShownDate;
     private String nextShownDateStr;
+    private boolean isDayChange = false;
 
     public TimeBarView(Context context) {
         super(context);
@@ -112,124 +115,164 @@ public class TimeBarView extends View {
     protected void onDraw(Canvas canvas) {
         int sx = getScrollX();
 
+        //inicializamos en caso de null para que se vea la vista en el disenador de layouts
+        if(initialDate == null) {
+            initialDate = new DateTime();
+            dayShownDate = initialDate;
+        }
+
         //background
         canvas.drawRect(0, 0, sx + getWidth(), getHeight(), pntBackground);
 
-        float x = leftPadding;
-        Calendar cal = Calendar.getInstance();
-        if(initialDate == null) {
-            initialDate = new Date();
-            dayShownDate = initialDate;
-        }
-        cal.setTime(initialDate);
-        int initialHour = cal.get(Calendar.HOUR_OF_DAY);
-        float increment = Constansts.DP_WIDTH_PER_HOUR * dm.density;
+        drawHourLines(canvas);
 
-        boolean isDayChange = false;
+        drawHourText(canvas);
+
+
+
+        int xx = 0;
+
+        //dibujamos el dia
+        xx = leftPadding;
+        DateTime initial = initialDate;
+
+        //calculamos la hora inicial y su posiciones
+        while(xx < sx) {
+            initial = initial.plusHours(1);
+            xx += Constansts.getPxWidthPerHour(dm);
+        }
+
+        //calculamos si hay cambio de dia
+        int xxx = xx;
         int x1 = 0;
         int x2 = 0;
-        int alpha = 255;
+        DateTime current = initial;
+        boolean otherDayChange = false;
 
-        while(x < getWidth() + sx + 100) {
+        while (xxx < getWidth() + sx) {
 
-            if(initialHour == 24) {
-                initialHour = 0;
-                if(x < getWidth() + sx) {
-                    isDayChange = true;
+            if(current.getHourOfDay() == 0) {
+                isDayChange = true;
+                dayShownDate = initial;
+//                int position = -1;
+//                for(int i = 0; i < positionedDatesList.size(); i++) {
+//                    if(positionedDatesList.get(i).getDateTime().equals(dayShownDate)) {
+//                        position = i;
+//                        break;
+//                    }
+//                }
+//                if(position != -1) {
+//                    x1 = positionedDatesList.get(position).getPosition();
+//                } else {
+//                    x1 = (int) ((xxx - sx - leftPadding) / 2.0 + sx + leftPadding);
+//                    positionedDatesList.add(new PositionedDate(dayShownDate, x1));
+//                }
 
-                    int position = -1;
-                    for(int i = 0; i < positionedDatesList.size(); i++) {
-                        if(positionedDatesList.get(i).getDate().equals(dayShownDate)) {
-                            position = i;
-                            break;
-                        }
-                    }
-                    if(position != -1) {
-                        x1 = positionedDatesList.get(position).getPosition();
-                    } else {
-                        x1 = (int) ((x - sx - leftPadding) / 2 + sx + leftPadding);
-                        positionedDatesList.add(new PositionedDate(dayShownDate, x1));
-                    }
-
-                    if(nextShownDate == null) {
-                        nextShownDate = new Date(dayShownDate.getTime() + oneDay);
-                    }
-
-                    nextShownDateStr = nextShownDate != null ? daySdf.format(nextShownDate).toUpperCase() : "";
-
-                    Rect bounds = new Rect();
-                    pntText.getTextBounds(nextShownDateStr, 0, nextShownDateStr.length(), bounds);
-
-                    if( (sx + getWidth() + x + bounds.width()) / 2 > sx + getWidth()) {
-                        x2 = sx + getWidth() - bounds.width() / 2;
-                        alpha = (int) (255 / bounds.width() * (sx + getWidth() - x + bounds.width() / 2));
-                    } else {
-                        x2 = (int) ((sx + getWidth() + x) / 2.0);
-                    }
-
-                    if(x2 < (getWidth() - leftPadding) / 2 + sx + leftPadding) {
-                        x2 = (getWidth() - leftPadding) / 2 + leftPadding + sx;
-                    }
-                }
+                break;
             }
 
-            canvas.drawLine(x, (float) getHeight(), x, getHeight() - 5 * dm.density, pntLines);
+            current = current.plusHours(1);
+            xxx += Constansts.getPxWidthPerHour(dm);
+        }
+
+
+        //dibujamos los dias
+
+//        if(otherDayChange && ) {
+//            isDayChange = true;
+//
+//        } else if(isDayChange){
+//            dayShownDate = dayShownDate.plusDays(1);
+//            nextShownDate = null;
+//            isDayChange = false;
+//        }
+
+        //pintamos el dia en si
+        if(!isDayChange) {
+            drawNormalDay(canvas, dayShownDate);
+        } else {
+            drawMovingDay(canvas, dayShownDate, 0);
+        }
+
+
+        //dibujamos la linea horizontal inferior de separacion
+        canvas.drawLine(0, getHeight() - 1, sx + getWidth(), getHeight() - 1, pntLines);
+    }
+
+    private void drawNormalDay(Canvas canvas, DateTime initialDay) {
+        int sx = getScrollX();
+        pntText.setAlpha(255);
+        String day = initialDay.toString("EEEE d").toUpperCase();
+        canvas.drawText(day, (getWidth() - leftPadding) / 2 + leftPadding + sx, getHeight() - 25 * dm.density, pntText);
+    }
+
+    private void drawMovingDay(Canvas canvas, DateTime initialDay, int changePos) {
+        int sx = getScrollX();
+        pntText.setAlpha(255);
+        String day = initialDay.toString("EEEE d").toUpperCase();
+        canvas.drawText(day, 100, getHeight() - 25 * dm.density, pntText);
+        String day2 = initialDay.plusDays(1).toString("EEEE d").toUpperCase();
+        canvas.drawText(day2, sx + getWidth() - 200, getHeight() - 25 * dm.density, pntText);
+    }
+
+    private void drawHourText(Canvas canvas) {
+        //dibujamos las horas
+        int sx = getScrollX();
+        int xx = leftPadding;
+        int initialHour = initialDate.getHourOfDay();
+        while(xx < getWidth() + sx + 200) {
+            if(initialHour == 24) {
+                initialHour = 0;
+            }
 
             String initialHourString = String.valueOf(initialHour) + ":00";
             Rect bounds = new Rect();
             pntText.getTextBounds(initialHourString, 0, initialHourString.length(), bounds);
 
             int textPos = 0;
-            if(sx + getWidth() < x - bounds.width() / 2) {
+            if(sx + getWidth() < xx - bounds.width() / 2) {
                 pntText.setAlpha(0);
 
-            } else if(sx + getWidth() > x - bounds.width() / 2 && sx + getWidth() < x + bounds.width() / 2) {
-                pntText.setAlpha((int) (255 / bounds.width() * (sx + getWidth() - x + bounds.width() / 2)));
+            } else if(sx + getWidth() > xx - bounds.width() / 2 && sx + getWidth() < xx + bounds.width() / 2) {
+                pntText.setAlpha((int) (255 / bounds.width() * (sx + getWidth() - xx + bounds.width() / 2)));
                 textPos = sx +  getWidth() - bounds.width() / 2;
 
             } else {
                 pntText.setAlpha(255);
-                textPos = (int) x;
+                textPos = (int) xx;
             }
             canvas.drawText(initialHourString, textPos, getHeight() - 10 * dm.density, pntText);
-
             initialHour++;
-            x += increment;
+            xx += Constansts.getPxWidthPerHour(dm);
         }
-
-
-        String day = daySdf.format(dayShownDate).toUpperCase();
-        pntText.setAlpha(255);
-        if(!isDayChange) {
-            canvas.drawText(day, (getWidth() - leftPadding) / 2 + leftPadding + sx, getHeight() - 25 * dm.density, pntText);
-        } else {
-
-            canvas.drawText(day, x1, getHeight() - 25 * dm.density, pntText);
-            pntText.setAlpha(alpha);
-            canvas.drawText(nextShownDateStr, x2, getHeight() - 25 * dm.density, pntText);
-        }
-
-        canvas.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1, pntLines);
     }
 
-
+    private void drawHourLines(Canvas canvas) {
+        //dibujamos las lineas
+        int sx = getScrollX();
+        int xx = leftPadding;
+        while(xx < getWidth() + sx) {
+            canvas.drawLine(xx, (float) getHeight(), xx, getHeight() - 5 * dm.density, pntLines);
+            xx += Constansts.getPxWidthPerHour(dm);
+        }
+    }
 
 
     private class PositionedDate {
 
-        private Date date;
+        private DateTime date;
         private int position;
 
-        public PositionedDate(Date date, int position) {
+        public PositionedDate(DateTime date, int position) {
             this.date = date;
             this.position = position;
         }
 
-        public Date getDate() {
+        public DateTime getDateTime() {
             return date;
         }
 
-        public void setDate(Date date) {
+        public void setDateTime(DateTime date) {
             this.date = date;
         }
 

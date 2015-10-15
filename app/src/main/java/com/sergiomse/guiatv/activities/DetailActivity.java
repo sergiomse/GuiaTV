@@ -1,40 +1,29 @@
 package com.sergiomse.guiatv.activities;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sergiomse.guiatv.AlarmNotificationService;
+import com.sergiomse.guiatv.alarm.AlarmAdapter;
 import com.sergiomse.guiatv.CustomLinearLayoutManager;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-
 import com.sergiomse.guiatv.R;
 import com.sergiomse.guiatv.adapters.LinksAdapter;
 import com.sergiomse.guiatv.database.GuiaDb;
-import com.sergiomse.guiatv.database.ProgramAlarm;
 import com.sergiomse.guiatv.model.Link;
 import com.sergiomse.guiatv.model.Program;
+
+import org.joda.time.DateTime;
 
 
 public class DetailActivity extends Activity {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
 
-    private WebView webView;
-    private ProgressDialog progressDialog;
     private Program program;
 
     private TextView tvTime;
@@ -46,7 +35,6 @@ public class DetailActivity extends Activity {
 
     private RecyclerView linksRecyclerView;
 
-    private SimpleDateFormat sdf = new SimpleDateFormat("HH.mm");
 
 
     @Override
@@ -63,15 +51,20 @@ public class DetailActivity extends Activity {
 
         ivAlarm = (ImageView) findViewById(R.id.ivAlarm);
 
-        tvTime.setText(sdf.format(program.getStart()));
+        tvTime.setText(program.getStart().toString("HH.mm"));
         tvChannel.setText(program.getChannelName());
         tvProgram.setText(program.getName());
         tvContent.setText(program.getDetails());
 
-        if(isAlarmSetForProgram()) {
-            ivAlarm.setImageResource(R.drawable.ic_alarm_on);
+        //is program already started
+        if(program.getStart().minusMinutes(5).compareTo(DateTime.now()) > 0) {
+            if (isAlarmSetForProgram()) {
+                ivAlarm.setImageResource(R.drawable.ic_alarm_on);
+            } else {
+                ivAlarm.setImageResource(R.drawable.ic_alarm);
+            }
         } else {
-            ivAlarm.setImageResource(R.drawable.ic_alarm);
+            ivAlarm.setVisibility(View.GONE);
         }
 
         linksRecyclerView = (RecyclerView) findViewById(R.id.linksRecyclerView);
@@ -92,43 +85,25 @@ public class DetailActivity extends Activity {
 
     private boolean isAlarmSetForProgram() {
         GuiaDb db = new GuiaDb(this);
-        ProgramAlarm p = db.getProgramAlarmById(program.getId());
+        boolean isSet = db.existProgramInDb(program);
         db.cleanup();
-        return p != null;
+        return isSet;
     }
 
     public void onClickAlarm(View v) {
         if(isAlarmSetForProgram()) {
-            GuiaDb db = new GuiaDb(this);
-            db.deleteProgramAlarmById(program.getId());
-            db.cleanup();
             ivAlarm.setImageResource(R.drawable.ic_alarm);
             Toast.makeText(this, "Eliminado aviso para \"" + program.getName() + "\"", Toast.LENGTH_SHORT).show();
 
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            Intent intent = new Intent(this, AlarmNotificationService.class);
-            PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, 0);
-            alarmManager.cancel(pendingIntent);
+            AlarmAdapter alarmAdapter = new AlarmAdapter(this);
+            alarmAdapter.removeAlarm(program);
 
         } else {
-            GuiaDb db = new GuiaDb(this);
-            ProgramAlarm programAlarm = new ProgramAlarm();
-            programAlarm.setId(program.getId());
-            Date alarm = new Date(program.getStart().getTime() - 5L * 60L * 1000L);
-            programAlarm.setAlarm(alarm);
-            programAlarm.setStart(program.getStart());
-            programAlarm.setName(program.getName());
-            programAlarm.setChannel(program.getChannelName());
-            db.insertProgramAlarm(programAlarm);
-            db.cleanup();
             ivAlarm.setImageResource(R.drawable.ic_alarm_on);
             Toast.makeText(this, "Activado aviso para \"" + program.getName() + "\"", Toast.LENGTH_SHORT).show();
 
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            Intent intent = new Intent(this, AlarmNotificationService.class);
-            intent.putExtra("programAlarm", programAlarm);
-            PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, programAlarm.getAlarm().getTime(), pendingIntent);
+            AlarmAdapter alarmAdapter = new AlarmAdapter(this);
+            alarmAdapter.setAlarm(program);
         }
     }
 
